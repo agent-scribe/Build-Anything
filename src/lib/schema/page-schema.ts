@@ -264,6 +264,169 @@ export const FooterSection = z.object({
   }),
 });
 
+
+export const GallerySection = z.object({
+  type: z.literal("gallery"),
+  ...sectionBase,
+  variant: z.enum(["grid", "masonry", "carousel"]).default("grid"),
+  props: z.object({
+    title: z.string().min(1),
+    subtitle: z.string().optional(),
+    columns: z.union([z.literal(2), z.literal(3), z.literal(4)]).default(3),
+    items: z.array(z.object({
+      image: ImageSchema,
+      caption: z.string().optional(),
+      category: z.string().optional(),
+    })).min(2),
+  }),
+});
+
+export const TeamSection = z.object({
+  type: z.literal("team"),
+  ...sectionBase,
+  variant: z.enum(["grid", "cards", "list"]).default("grid"),
+  props: z.object({
+    title: z.string().min(1),
+    subtitle: z.string().optional(),
+    columns: z.union([z.literal(2), z.literal(3), z.literal(4)]).default(3),
+    members: z.array(z.object({
+      name: z.string().min(1),
+      role: z.string().min(1),
+      bio: z.string().optional(),
+      avatar: ImageSchema.optional(),
+      socials: z.array(z.object({ platform: IconName, href: z.string() })).default([]),
+    })).min(1),
+  }),
+});
+
+export const BlogSection = z.object({
+  type: z.literal("blog"),
+  ...sectionBase,
+  variant: z.enum(["grid", "list", "featured"]).default("grid"),
+  props: z.object({
+    title: z.string().min(1),
+    subtitle: z.string().optional(),
+    columns: z.union([z.literal(2), z.literal(3)]).default(3),
+    posts: z.array(z.object({
+      title: z.string().min(1),
+      excerpt: z.string().min(1),
+      date: z.string().min(1),
+      author: z.string().optional(),
+      image: ImageSchema.optional(),
+      href: z.string().default("#"),
+    })).min(1),
+  }),
+});
+
+export const ContactSection = z.object({
+  type: z.literal("contact"),
+  ...sectionBase,
+  variant: z.enum(["split", "centered", "minimal"]).default("split"),
+  props: z.object({
+    title: z.string().min(1),
+    subtitle: z.string().optional(),
+    email: z.string().optional(),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+    formFields: z.array(z.enum(["name", "email", "phone", "message", "subject"])).default(["name", "email", "message"]),
+    submitLabel: z.string().default("Send Message"),
+  }),
+});
+
+export const ComparisonSection = z.object({
+  type: z.literal("comparison"),
+  ...sectionBase,
+  variant: z.enum(["table", "cards"]).default("table"),
+  props: z.object({
+    title: z.string().min(1),
+    subtitle: z.string().optional(),
+    plans: z.array(z.object({
+      name: z.string().min(1),
+      highlighted: z.boolean().default(false),
+    })).min(2).max(4),
+    features: z.array(z.object({
+      name: z.string().min(1),
+      values: z.array(z.union([z.boolean(), z.string()])),
+    })).min(1),
+  }),
+});
+
+export const TimelineSection = z.object({
+  type: z.literal("timeline"),
+  ...sectionBase,
+  variant: z.enum(["vertical", "alternating"]).default("vertical"),
+  props: z.object({
+    title: z.string().min(1),
+    subtitle: z.string().optional(),
+    items: z.array(z.object({
+      date: z.string().min(1),
+      title: z.string().min(1),
+      description: z.string().min(1),
+      icon: IconName.optional(),
+    })).min(2),
+  }),
+});
+
+export const VideoSection = z.object({
+  type: z.literal("video"),
+  ...sectionBase,
+  variant: z.enum(["full", "split", "background"]).default("full"),
+  props: z.object({
+    title: z.string().optional(),
+    subtitle: z.string().optional(),
+    videoUrl: z.string().min(1),
+    thumbnail: ImageSchema.optional(),
+    autoplay: z.boolean().default(false),
+  }),
+});
+
+export const BannerSection = z.object({
+  type: z.literal("banner"),
+  ...sectionBase,
+  variant: z.enum(["top", "inline", "floating"]).default("inline"),
+  props: z.object({
+    text: z.string().min(1),
+    cta: LinkSchema.optional(),
+    dismissable: z.boolean().default(true),
+    style: z.enum(["info", "success", "warning", "promo"]).default("promo"),
+  }),
+});
+
+export const PortfolioSection = z.object({
+  type: z.literal("portfolio"),
+  ...sectionBase,
+  variant: z.enum(["grid", "masonry", "showcase"]).default("grid"),
+  props: z.object({
+    title: z.string().min(1),
+    subtitle: z.string().optional(),
+    columns: z.union([z.literal(2), z.literal(3)]).default(3),
+    projects: z.array(z.object({
+      title: z.string().min(1),
+      description: z.string().optional(),
+      category: z.string().optional(),
+      image: ImageSchema.optional(),
+      href: z.string().default("#"),
+    })).min(1),
+  }),
+});
+
+export const MetricsSection = z.object({
+  type: z.literal("metrics"),
+  ...sectionBase,
+  variant: z.enum(["cards", "inline", "hero"]).default("cards"),
+  props: z.object({
+    title: z.string().optional(),
+    subtitle: z.string().optional(),
+    items: z.array(z.object({
+      value: z.string().min(1),
+      label: z.string().min(1),
+      prefix: z.string().optional(),
+      suffix: z.string().optional(),
+      trend: z.enum(["up", "down", "neutral"]).optional(),
+    })).min(2).max(6),
+  }),
+});
+
 /** The discriminated union of every section the renderer understands. */
 export const SectionSchema = z.discriminatedUnion("type", [
   NavbarSection,
@@ -278,6 +441,16 @@ export const SectionSchema = z.discriminatedUnion("type", [
   LogosSection,
   StatsSection,
   FooterSection,
+  GallerySection,
+  TeamSection,
+  BlogSection,
+  ContactSection,
+  ComparisonSection,
+  TimelineSection,
+  VideoSection,
+  BannerSection,
+  PortfolioSection,
+  MetricsSection,
 ]);
 export type Section = z.infer<typeof SectionSchema>;
 export type SectionType = Section["type"];
@@ -368,4 +541,14 @@ export const SECTION_TYPES: readonly SectionType[] = [
   "logos",
   "stats",
   "footer",
+  "gallery",
+  "team",
+  "blog",
+  "contact",
+  "comparison",
+  "timeline",
+  "video",
+  "banner",
+  "portfolio",
+  "metrics",
 ] as const;

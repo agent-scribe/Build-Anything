@@ -101,6 +101,61 @@ export function createSection(type: SectionType): Section {
     case "footer":
       return { type, id, visible: true, paddingY: "lg", background: "card", variant: "columns",
         props: { logo: "Brand", columns: [], socials: [], copyright: "© 2026 Brand. All rights reserved." } };
+    case "gallery":
+      return { type, id, visible: true, paddingY: "lg", background: "default", variant: "grid",
+        props: { title: "Gallery", columns: 3, items: [
+          { image: { src: "https://source.unsplash.com/600x400/?design", alt: "Design" }, caption: "Project one" },
+          { image: { src: "https://source.unsplash.com/600x400/?creative", alt: "Creative" }, caption: "Project two" },
+          { image: { src: "https://source.unsplash.com/600x400/?art", alt: "Art" }, caption: "Project three" } ] } };
+    case "team":
+      return { type, id, visible: true, paddingY: "lg", background: "default", variant: "grid",
+        props: { title: "Meet the team", columns: 3, members: [
+          { name: "Alex Rivera", role: "CEO", bio: "Visionary leader with 10 years of experience.", socials: [] },
+          { name: "Jordan Lee", role: "CTO", bio: "Full-stack engineer and architect.", socials: [] },
+          { name: "Sam Chen", role: "Design Lead", bio: "Pixel-perfect UI craftsperson.", socials: [] } ] } };
+    case "blog":
+      return { type, id, visible: true, paddingY: "lg", background: "default", variant: "grid",
+        props: { title: "Latest posts", columns: 3, posts: [
+          { title: "Getting Started", excerpt: "Everything you need to know to hit the ground running.", date: "2026-01-15", href: "#" },
+          { title: "Best Practices", excerpt: "Tips and tricks from our engineering team.", date: "2026-02-01", href: "#" },
+          { title: "What\'s New", excerpt: "A look at the features we shipped this quarter.", date: "2026-03-10", href: "#" } ] } };
+    case "contact":
+      return { type, id, visible: true, paddingY: "lg", background: "muted", variant: "split",
+        props: { title: "Get in touch", email: "hello@example.com", formFields: ["name", "email", "message"], submitLabel: "Send Message" } };
+    case "comparison":
+      return { type, id, visible: true, paddingY: "lg", background: "default", variant: "table",
+        props: { title: "Compare plans", plans: [
+          { name: "Starter", highlighted: false }, { name: "Pro", highlighted: true }, { name: "Enterprise", highlighted: false } ],
+          features: [
+            { name: "Users", values: ["1", "10", "Unlimited"] },
+            { name: "Storage", values: ["1 GB", "50 GB", "500 GB"] },
+            { name: "Support", values: ["Email", "Priority", "Dedicated"] } ] } };
+    case "timeline":
+      return { type, id, visible: true, paddingY: "lg", background: "default", variant: "vertical",
+        props: { title: "Our journey", items: [
+          { date: "2024", title: "Founded", description: "Started with a bold idea and a small team." },
+          { date: "2025", title: "Product launch", description: "Shipped v1 and onboarded first 100 customers." },
+          { date: "2026", title: "Scale", description: "Expanded globally and crossed 10k users." } ] } };
+    case "video":
+      return { type, id, visible: true, paddingY: "lg", background: "default", variant: "full",
+        props: { title: "See it in action", videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", autoplay: false } };
+    case "banner":
+      return { type, id, visible: true, paddingY: "sm", background: "default", variant: "inline",
+        props: { text: "Limited time offer — 20% off all plans!", dismissable: true, style: "promo",
+          cta: { label: "Claim now", href: "#pricing", variant: "primary", external: false } } };
+    case "portfolio":
+      return { type, id, visible: true, paddingY: "lg", background: "default", variant: "grid",
+        props: { title: "Selected work", columns: 3, projects: [
+          { title: "Brand Refresh", description: "Complete visual identity overhaul.", category: "Branding", href: "#" },
+          { title: "Mobile App", description: "Cross-platform fintech application.", category: "Development", href: "#" },
+          { title: "E-commerce Store", description: "High-conversion online storefront.", category: "Web", href: "#" } ] } };
+    case "metrics":
+      return { type, id, visible: true, paddingY: "lg", background: "muted", variant: "cards",
+        props: { title: "By the numbers", items: [
+          { value: "10k+", label: "Customers", trend: "up" },
+          { value: "99.9%", label: "Uptime", trend: "up" },
+          { value: "4.9", label: "Rating", suffix: "/5", trend: "up" },
+          { value: "< 1s", label: "Response time", trend: "down" } ] } };
   }
 }
 

@@ -17,10 +17,19 @@ export { Newsletter } from "./Newsletter";
 export { Logos } from "./Logos";
 export { Stats } from "./Stats";
 export { Footer } from "./Footer";
+export { Gallery } from "./Gallery";
+export { Team } from "./Team";
+export { Blog } from "./Blog";
+export { Contact } from "./Contact";
+export { Comparison } from "./Comparison";
+export { Timeline } from "./Timeline";
+export { Video } from "./Video";
+export { Banner } from "./Banner";
+export { Portfolio } from "./Portfolio";
+export { Metrics } from "./Metrics";
 
 export interface SectionMeta {
   label: string;
-  /** lucide icon name */
   icon: string;
   description: string;
   ecommerce?: boolean;
@@ -39,4 +48,14 @@ export const SECTION_META: Record<SectionType, SectionMeta> = {
   logos: { label: "Logo cloud", icon: "badge-check", description: "Trusted-by logo row" },
   stats: { label: "Stats", icon: "trending-up", description: "Headline metrics" },
   footer: { label: "Footer", icon: "panel-bottom", description: "Links, socials, and legal" },
+  gallery: { label: "Gallery", icon: "images", description: "Image grid with lightbox" },
+  team: { label: "Team", icon: "users", description: "Team member cards" },
+  blog: { label: "Blog", icon: "file-text", description: "Blog post cards" },
+  contact: { label: "Contact", icon: "mail", description: "Contact form with info" },
+  comparison: { label: "Comparison", icon: "columns", description: "Feature comparison table" },
+  timeline: { label: "Timeline", icon: "clock", description: "Chronological event timeline" },
+  video: { label: "Video", icon: "play-circle", description: "Video embed section" },
+  banner: { label: "Banner", icon: "flag", description: "Announcement or promo banner" },
+  portfolio: { label: "Portfolio", icon: "folder-open", description: "Project showcase grid" },
+  metrics: { label: "Metrics", icon: "bar-chart-3", description: "Animated counter cards" },
 };

@@ -95,6 +95,53 @@ const CONTENT_FIELDS: Partial<Record<SectionType, FieldDef[]>> = {
     { key: "tagline", label: "Tagline", kind: "text" },
     { key: "copyright", label: "Copyright", kind: "text" },
   ],
+  gallery: [
+    { key: "title", label: "Title", kind: "text" },
+    { key: "subtitle", label: "Subtitle", kind: "text" },
+    { key: "columns", label: "Columns", kind: "select", options: ["2", "3", "4"] },
+  ],
+  team: [
+    { key: "title", label: "Title", kind: "text" },
+    { key: "subtitle", label: "Subtitle", kind: "text" },
+    { key: "columns", label: "Columns", kind: "select", options: ["2", "3", "4"] },
+  ],
+  blog: [
+    { key: "title", label: "Title", kind: "text" },
+    { key: "subtitle", label: "Subtitle", kind: "text" },
+    { key: "columns", label: "Columns", kind: "select", options: ["2", "3"] },
+  ],
+  contact: [
+    { key: "title", label: "Title", kind: "text" },
+    { key: "subtitle", label: "Subtitle", kind: "text" },
+    { key: "email", label: "Email", kind: "text" },
+    { key: "phone", label: "Phone", kind: "text" },
+    { key: "submitLabel", label: "Button label", kind: "text" },
+  ],
+  comparison: [
+    { key: "title", label: "Title", kind: "text" },
+    { key: "subtitle", label: "Subtitle", kind: "text" },
+  ],
+  timeline: [
+    { key: "title", label: "Title", kind: "text" },
+    { key: "subtitle", label: "Subtitle", kind: "text" },
+  ],
+  video: [
+    { key: "title", label: "Title", kind: "text" },
+    { key: "subtitle", label: "Subtitle", kind: "text" },
+    { key: "videoUrl", label: "Video URL", kind: "text" },
+  ],
+  banner: [
+    { key: "text", label: "Banner text", kind: "textarea" },
+  ],
+  portfolio: [
+    { key: "title", label: "Title", kind: "text" },
+    { key: "subtitle", label: "Subtitle", kind: "text" },
+    { key: "columns", label: "Columns", kind: "select", options: ["2", "3"] },
+  ],
+  metrics: [
+    { key: "title", label: "Title", kind: "text" },
+    { key: "subtitle", label: "Subtitle", kind: "text" },
+  ],
 };
 
 const VARIANTS: Record<SectionType, readonly string[]> = {
@@ -110,6 +157,16 @@ const VARIANTS: Record<SectionType, readonly string[]> = {
   logos: ["row", "grid"],
   stats: ["row", "cards"],
   footer: ["columns", "simple"],
+  gallery: ["grid", "masonry", "carousel"],
+  team: ["grid", "cards", "list"],
+  blog: ["grid", "list", "featured"],
+  contact: ["split", "centered", "minimal"],
+  comparison: ["table", "cards"],
+  timeline: ["vertical", "alternating"],
+  video: ["full", "split", "background"],
+  banner: ["top", "inline", "floating"],
+  portfolio: ["grid", "masonry", "showcase"],
+  metrics: ["cards", "inline", "hero"],
 };
 
 const BACKGROUNDS = ["default", "muted", "card", "primary", "inverted"] as const;
@@ -129,7 +186,7 @@ const COLOR_KEYS: { key: keyof Theme["colors"]; label: string }[] = [
 ];
 
 /* Sections that have editable item arrays */
-const ITEM_SECTIONS = new Set<SectionType>(["features", "testimonials", "faq", "pricing", "stats", "logos"]);
+const ITEM_SECTIONS = new Set<SectionType>(["features", "testimonials", "faq", "pricing", "stats", "logos", "gallery", "team", "blog", "timeline", "comparison", "portfolio", "metrics"]);
 
 export function Inspector({ tab, onTab }: { tab: InspectorTab; onTab: (t: InspectorTab) => void }) {
   const hasDoc = useEditorStore((s) => Boolean(s.document));

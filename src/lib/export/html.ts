@@ -197,6 +197,82 @@ function renderBody(section: Section, doc: SiteDocument): string {
         .join("");
       return `${p.title ? heading(p.title) : ""}<div class="wb-grid" style="--cols:${p.items.length}">${items}</div>`;
     }
+    case "gallery": {
+      const p = section.props;
+      const items = p.items.map((item: any) =>
+        `<div class="wb-gallery-item">${imagePlaceholderSafe(item.image.alt, t)}${item.caption ? `<p>${esc(item.caption)}</p>` : ""}</div>`
+      ).join("");
+      return `${heading(p.title, p.subtitle)}<div class="wb-grid wb-cols-${p.columns ?? 3}">${items}</div>`;
+    }
+    case "team": {
+      const p = section.props;
+      const members = p.members.map((m: any) =>
+        `<div class="wb-card" style="text-align:center"><div style="font-size:3rem;margin-bottom:0.5rem">👤</div><h3>${esc(m.name)}</h3><p style="color:var(--accent);font-size:.9rem">${esc(m.role)}</p>${m.bio ? `<p style="color:var(--muted-fg);font-size:.85rem">${esc(m.bio)}</p>` : ""}</div>`
+      ).join("");
+      return `${heading(p.title, p.subtitle)}<div class="wb-grid wb-cols-${p.columns ?? 3}">${members}</div>`;
+    }
+    case "blog": {
+      const p = section.props;
+      const posts = p.posts.map((post: any) =>
+        `<div class="wb-card"><h3>${esc(post.title)}</h3><p style="font-size:.8rem;color:var(--muted-fg)">${esc(post.date)}${post.author ? ` · ${esc(post.author)}` : ""}</p><p>${esc(post.excerpt)}</p></div>`
+      ).join("");
+      return `${heading(p.title, p.subtitle)}<div class="wb-grid wb-cols-${p.columns ?? 3}">${posts}</div>`;
+    }
+    case "contact": {
+      const p = section.props;
+      const info = [p.email && `📧 ${esc(p.email)}`, p.phone && `📞 ${esc(p.phone)}`, p.address && `📍 ${esc(p.address)}`].filter(Boolean).map(i => `<p>${i}</p>`).join("");
+      const fields = (p.formFields ?? ["name","email","message"]).map((f: string) =>
+        f === "message" ? `<textarea placeholder="${esc(f)}" rows="4" style="width:100%;padding:.75rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);color:var(--fg)"></textarea>` :
+        `<input type="${f === "email" ? "email" : "text"}" placeholder="${esc(f)}" style="width:100%;padding:.75rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);color:var(--fg)" />`
+      ).join("");
+      return `${heading(p.title, p.subtitle)}<div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem"><div>${info}</div><form style="display:flex;flex-direction:column;gap:1rem">${fields}<button class="wb-btn-primary">${esc(p.submitLabel ?? "Send")}</button></form></div>`;
+    }
+    case "comparison": {
+      const p = section.props;
+      const headerRow = `<tr><th></th>${p.plans.map((pl: any) => `<th${pl.highlighted ? ' style="color:var(--accent)"' : ""}>${esc(pl.name)}</th>`).join("")}</tr>`;
+      const rows = p.features.map((f: any) =>
+        `<tr><td>${esc(f.name)}</td>${f.values.map((v: any) => `<td>${typeof v === "boolean" ? (v ? "✓" : "—") : esc(String(v))}</td>`).join("")}</tr>`
+      ).join("");
+      return `${heading(p.title, p.subtitle)}<table style="width:100%;border-collapse:collapse;text-align:center" class="wb-table">${headerRow}${rows}</table>`;
+    }
+    case "timeline": {
+      const p = section.props;
+      const items = p.items.map((item: any) =>
+        `<div style="display:flex;gap:1.5rem;padding-bottom:2rem"><div style="display:flex;flex-direction:column;align-items:center"><div style="width:12px;height:12px;border-radius:50%;background:var(--accent)"></div><div style="width:2px;flex:1;background:var(--border)"></div></div><div><p style="color:var(--accent);font-weight:600;font-size:.85rem">${esc(item.date)}</p><h3>${esc(item.title)}</h3><p style="color:var(--muted-fg)">${esc(item.description)}</p></div></div>`
+      ).join("");
+      return `${heading(p.title, p.subtitle)}<div style="max-width:600px;margin:0 auto">${items}</div>`;
+    }
+    case "video": {
+      const p = section.props;
+      let embedUrl = p.videoUrl;
+      const ytMatch = p.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+      if (ytMatch) embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}`;
+      const vmMatch = p.videoUrl.match(/vimeo\.com\/(\d+)/);
+      if (vmMatch) embedUrl = `https://player.vimeo.com/video/${vmMatch[1]}`;
+      return `${p.title ? heading(p.title, p.subtitle) : ""}<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius)"><iframe src="${esc(embedUrl)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allowfullscreen></iframe></div>`;
+    }
+    case "banner": {
+      const p = section.props;
+      const colors: Record<string, string> = { info: "#3b82f6", success: "#22c55e", warning: "#eab308", promo: "var(--accent)" };
+      const color = colors[p.style ?? "promo"] ?? "var(--accent)";
+      return `<div style="display:flex;align-items:center;justify-content:center;gap:1rem;padding:1rem 2rem;background:${color};color:#fff;border-radius:var(--radius);font-weight:500"><span>${esc(p.text)}</span>${p.cta ? `<a href="${esc(p.cta.href)}" class="wb-btn-secondary" style="color:#fff;border-color:#fff">${esc(p.cta.label)}</a>` : ""}</div>`;
+    }
+    case "portfolio": {
+      const p = section.props;
+      const projects = p.projects.map((proj: any) =>
+        `<div class="wb-card"><h3>${esc(proj.title)}</h3>${proj.category ? `<p style="color:var(--accent);font-size:.8rem;text-transform:uppercase">${esc(proj.category)}</p>` : ""}${proj.description ? `<p style="color:var(--muted-fg)">${esc(proj.description)}</p>` : ""}</div>`
+      ).join("");
+      return `${heading(p.title, p.subtitle)}<div class="wb-grid wb-cols-${p.columns ?? 3}">${projects}</div>`;
+    }
+    case "metrics": {
+      const p = section.props;
+      const items = p.items.map((item: any) => {
+        const trend = item.trend === "up" ? "↑" : item.trend === "down" ? "↓" : "";
+        const trendColor = item.trend === "up" ? "#22c55e" : item.trend === "down" ? "#ef4444" : "var(--muted-fg)";
+        return `<div class="wb-stat"><span class="wb-stat-val">${item.prefix ?? ""}${esc(item.value)}${item.suffix ?? ""}</span><span class="wb-stat-label">${esc(item.label)} ${trend ? `<span style="color:${trendColor}">${trend}</span>` : ""}</span></div>`;
+      }).join("");
+      return `${p.title ? heading(p.title, p.subtitle) : ""}<div class="wb-stats">${items}</div>`;
+    }
     case "footer": {
       const p = section.props;
       const cols = p.columns

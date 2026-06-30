@@ -64,6 +64,26 @@ type Section =
       props:{ title?:string; logos:{name:string; image?:Image}[] } }
   | SectionBase & { type:"stats"; variant?:"row"|"cards";
       props:{ title?:string; items:{value:string; label:string}[] } }   // 2-4 items
+  | SectionBase & { type:"gallery"; variant?:"grid"|"masonry"|"carousel";
+      props:{ title:string; subtitle?:string; columns?:2|3|4; items:{image:Image; caption?:string; category?:string}[] } }
+  | SectionBase & { type:"team"; variant?:"grid"|"cards"|"list";
+      props:{ title:string; subtitle?:string; columns?:2|3|4; members:{name:string; role:string; bio?:string; avatar?:Image; socials?:{platform:Icon; href:string}[]}[] } }
+  | SectionBase & { type:"blog"; variant?:"grid"|"list"|"featured";
+      props:{ title:string; subtitle?:string; columns?:2|3; posts:{title:string; excerpt:string; date:string; author?:string; image?:Image; href?:string}[] } }
+  | SectionBase & { type:"contact"; variant?:"split"|"centered"|"minimal";
+      props:{ title:string; subtitle?:string; email?:string; phone?:string; address?:string; formFields?:("name"|"email"|"phone"|"message"|"subject")[]; submitLabel?:string } }
+  | SectionBase & { type:"comparison"; variant?:"table"|"cards";
+      props:{ title:string; subtitle?:string; plans:{name:string; highlighted?:boolean}[]; features:{name:string; values:(boolean|string)[]}[] } }
+  | SectionBase & { type:"timeline"; variant?:"vertical"|"alternating";
+      props:{ title:string; subtitle?:string; items:{date:string; title:string; description:string; icon?:Icon}[] } }
+  | SectionBase & { type:"video"; variant?:"full"|"split"|"background";
+      props:{ title?:string; subtitle?:string; videoUrl:string; thumbnail?:Image; autoplay?:boolean } }
+  | SectionBase & { type:"banner"; variant?:"top"|"inline"|"floating";
+      props:{ text:string; cta?:Link; dismissable?:boolean; style?:"info"|"success"|"warning"|"promo" } }
+  | SectionBase & { type:"portfolio"; variant?:"grid"|"masonry"|"showcase";
+      props:{ title:string; subtitle?:string; columns?:2|3; projects:{title:string; description?:string; category?:string; image?:Image; href?:string}[] } }
+  | SectionBase & { type:"metrics"; variant?:"cards"|"inline"|"hero";
+      props:{ title?:string; subtitle?:string; items:{value:string; label:string; prefix?:string; suffix?:string; trend?:"up"|"down"|"neutral"}[] } }
   | SectionBase & { type:"footer"; variant?:"columns"|"simple";
       props:{ logo:string; tagline?:string; columns:{heading:string; links:Link[]}[]; socials:{platform:Icon; href:string}[]; copyright:string } };
 
@@ -102,6 +122,16 @@ export const ENUMS = {
     "newsletter",
     "logos",
     "stats",
+    "gallery",
+    "team",
+    "blog",
+    "contact",
+    "comparison",
+    "timeline",
+    "video",
+    "banner",
+    "portfolio",
+    "metrics",
     "footer",
   ],
   radius: ["none", "sm", "md", "lg", "xl", "full"],

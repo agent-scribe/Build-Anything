@@ -31,14 +31,15 @@ export interface GenerationBrief {
 export function buildPlannerPrompt(brief: GenerationBrief): string {
   return `You are a senior conversion strategist. Given a business description, output the optimal
 home-page section order as a JSON array of section types (from this set: navbar, hero, features,
-products, pricing, testimonials, faq, cta, newsletter, logos, stats, footer).
+products, pricing, testimonials, faq, cta, newsletter, logos, stats, gallery, team, blog, contact,
+comparison, timeline, video, banner, portfolio, metrics, footer).
 
 Rules:
 - Always start with "navbar" and end with "footer".
 - Lead with "hero" immediately after navbar.
 - Include "products" only for sites that sell physical/digital goods.
 - Include "pricing" only for SaaS/subscription/service businesses.
-- Pick 5–9 sections total. Order them to build trust then drive action (the last content
+- Pick 6–12 sections total. Order them to build trust then drive action (the last content
   section before footer should usually be a "cta" or "newsletter").
 
 Return ONLY the JSON array, nothing else. Example: ["navbar","hero","logos","features","testimonials","cta","footer"]
@@ -97,8 +98,13 @@ DESIGN & COPY DIRECTION
   that don't serve this specific business.
 - Vary section "variant" and "background" so the page has rhythm — alternate default/muted, don't
   stack three identical-looking blocks. Use "primary" or "inverted" background sparingly for emphasis.
-- Match section choice to business type: storefronts get products; SaaS gets pricing; services get
-  testimonials + faq; newsletters/communities get a prominent newsletter section.
+- Match section choice to business type: storefronts get products; SaaS gets pricing + comparison; services get
+  testimonials + faq; portfolios/agencies get portfolio + team; content sites get blog; any business
+  can benefit from metrics, gallery, timeline, contact, banner, or video sections.
+- New section types available: gallery (image grids), team (member cards), blog (post cards),
+  contact (form + info), comparison (feature tables), timeline (milestones), video (YouTube/Vimeo),
+  banner (promo/info bars), portfolio (project showcases), metrics (number cards with trends).
+  Use these to create richer, more varied pages.
 
 Think briefly about structure, theme, and voice, then emit the single JSON object.`;
 
