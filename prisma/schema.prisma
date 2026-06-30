@@ -1,0 +1,59 @@
+// Prisma schema — projects store the SiteDocument as JSON (the page IS data),
+// with Version snapshots for history and Asset rows for uploaded/generated media.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  createdAt DateTime  @default(now())
+  projects  Project[]
+}
+
+model Project {
+  id        String    @id @default(cuid())
+  name      String
+  industry  String?
+  /// The current SiteDocument (validated against SiteDocumentSchema before write).
+  document  Json
+  ownerId   String
+  owner     User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  versions  Version[]
+  assets    Asset[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([ownerId])
+}
+
+model Version {
+  id        String   @id @default(cuid())
+  label     String?
+  /// A point-in-time snapshot of the document (manual saves, pre-regeneration, etc).
+  document  Json
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+}
+
+model Asset {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String?
+  width     Int?
+  height    Int?
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+}
