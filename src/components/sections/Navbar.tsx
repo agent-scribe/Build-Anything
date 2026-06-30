@@ -1,8 +1,22 @@
+"use client";
+
 import type { SectionOf } from "@/lib/schema/page-schema";
 import { SectionShell, SiteButton } from "./_shared";
+import { useEditorStore } from "@/lib/store/useEditorStore";
 
 export function Navbar({ section }: { section: SectionOf<"navbar"> }) {
   const { logo, links, cta, sticky } = section.props;
+  const pages = useEditorStore((s) => s.document?.pages ?? []);
+  const setActivePage = useEditorStore((s) => s.setActivePage);
+
+  /** If href matches a page path, navigate to that page instead of following the link */
+  function handleNavClick(e: React.MouseEvent, href: string) {
+    const targetPage = pages.find((p) => p.path === href);
+    if (targetPage) {
+      e.preventDefault();
+      setActivePage(targetPage.id);
+    }
+  }
   const centered = section.variant === "centered";
   return (
     <SectionShell
@@ -27,7 +41,12 @@ export function Navbar({ section }: { section: SectionOf<"navbar"> }) {
           style={{ color: "var(--wb-muted-fg)" }}
         >
           {links.map((l, i) => (
-            <a key={i} href={l.href} className="text-sm transition-opacity hover:opacity-80">
+            <a
+              key={i}
+              href={l.href}
+              onClick={(e) => handleNavClick(e, l.href)}
+              className="text-sm transition-opacity hover:opacity-80 cursor-pointer"
+            >
               {l.label}
             </a>
           ))}

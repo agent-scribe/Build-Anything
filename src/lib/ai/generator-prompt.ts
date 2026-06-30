@@ -77,6 +77,15 @@ NON-NEGOTIABLE OUTPUT RULES
 6. Use real lucide-react icon names (e.g. "leaf", "shield-check", "zap", "flask-conical", "sparkles").
 7. Images use the placeholder token form "{{unsplash:DESCRIPTIVE-KEYWORDS}}". Never invent URLs.
 
+MULTI-PAGE RULES
+8. Generate 2–4 pages. The first page MUST have path "/". Additional pages should include relevant
+   pages for the business type (e.g. "/about", "/products", "/pricing", "/contact").
+9. Every page must have its own "id", "name", "path", and optional "seo" metadata.
+10. Each page should have a navbar and footer section. Inner pages are shorter (3–5 sections).
+11. Navbar links should reference real page paths (e.g. href: "/about", href: "/products").
+    Anchor links (href: "#features") are fine for the home page only.
+12. Each page's sections must have globally unique ids (prefix with page name if needed).
+
 DESIGN & COPY DIRECTION
 - Write specific, benefit-led copy in the brand's voice. NEVER use lorem ipsum or "Lorem". Headlines
   are short and concrete; subheadlines add one crisp supporting idea. Sentence case throughout.
@@ -110,7 +119,7 @@ export function buildGeneratorUser(brief: GenerationBrief, plannedOrder?: string
       )}`
     );
   }
-  lines.push(`\nGenerate the complete SiteDocument now. Output only the JSON object.`);
+  lines.push(`\nGenerate a complete multi-page SiteDocument (2-4 pages including home at "/"). Output only the JSON object.`);
   return lines.join("\n");
 }
 

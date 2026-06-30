@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   ChevronDown,
   Code2,
+  FileText,
   Eye,
   Monitor,
   Redo2,
@@ -31,6 +32,9 @@ export function Topbar({
 }) {
   const document = useEditorStore((s) => s.document);
   const usedMock = useEditorStore((s) => s.usedMock);
+  const activePageId = useEditorStore((s) => s.activePageId);
+  const setActivePage = useEditorStore((s) => s.setActivePage);
+  const pages = document?.pages ?? [];
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
   const past = useEditorStore((s) => s.past.length);
@@ -76,6 +80,29 @@ export function Topbar({
             demo
           </span>
         ) : null}
+        {pages.length > 1 && (
+          <>
+            <span className="text-zinc-700">|</span>
+            <div className="flex items-center gap-0.5">
+              {pages.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setActivePage(p.id)}
+                  className={cn(
+                    "flex items-center gap-1 rounded-md px-2 py-0.5 text-xs transition-colors",
+                    p.id === activePageId
+                      ? "bg-zinc-800 text-zinc-100"
+                      : "text-zinc-500 hover:text-zinc-300"
+                  )}
+                >
+                  <FileText size={11} />
+                  {p.name}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="flex items-center gap-1 rounded-lg border border-zinc-800 bg-[#141418] p-0.5">
