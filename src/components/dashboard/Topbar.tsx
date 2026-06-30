@@ -4,24 +4,20 @@ import * as React from "react";
 import {
   ChevronDown,
   Code2,
-  FileText,
   Eye,
-  FolderArchive,
   Monitor,
   Redo2,
   Smartphone,
   Tablet,
   Undo2,
   Upload,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useEditorStore } from "@/lib/store/useEditorStore";
-import { renderSiteToHtml, renderMultiPageHtml } from "@/lib/export/html";
-import { exportReactBundle } from "@/lib/export/react";
+import { useCollabStore } from "@/lib/collab";
+import { CollabPanel } from "./CollabPanel";
 import type { Device, ViewMode } from "./DashboardWorkspace";
-import { UserMenu } from "./UserMenu";
-import { ProjectList } from "./ProjectList";
-import { FolderOpen, Save } from "lucide-react";
 
 export function Topbar({
   view,
@@ -36,55 +32,44 @@ export function Topbar({
 }) {
   const document = useEditorStore((s) => s.document);
   const usedMock = useEditorStore((s) => s.usedMock);
-  const activePageId = useEditorStore((s) => s.activePageId);
-  const setActivePage = useEditorStore((s) => s.setActivePage);
-  const pages = document?.pages ?? [];
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
   const past = useEditorStore((s) => s.past.length);
   const future = useEditorStore((s) => s.future.length);
   const [exporting, setExporting] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const [showProjects, setShowProjects] = React.useState(false);
-  const projectId = useEditorStore((s) => s.projectId);
-  const lastSavedAt = useEditorStore((s) => s.lastSavedAt);
+  const [showCollab, setShowCollab] = React.useState(false);
+  const collabStatus = useCollabStore((s) => s.status);
+  const peerCount = useCollabStore((s) => s.peers.length);
 
-  async function handleExport(format: "html" | "html-zip" | "react") {
+  async function handleExport(format: "html" | "react") {
     if (!document) return;
     setMenuOpen(false);
     setExporting(true);
     try {
-      const slug =
-        document.meta.name.replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "site";
-
+      const res = await fetch("/api/export", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ document, format }),
+      });
+      if (!res.ok) throw new Error("Export failed");
+      const slug = document.meta.name.replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "site";
+      let blob: Blob;
+      let filename: string;
       if (format === "html") {
-        // Single-page current HTML
-        const blob = new Blob([renderSiteToHtml(document)], {
-          type: "text/html",
-        });
-        download(blob, `${slug}.html`);
-        return;
-      }
-
-      // Both zip formats need JSZip
-      const { default: JSZip } = await import("jszip");
-      const zip = new JSZip();
-
-      if (format === "html-zip") {
-        const htmlFiles = renderMultiPageHtml(document);
-        for (const [name, content] of Object.entries(htmlFiles)) {
-          zip.file(name, content);
-        }
+        blob = await res.blob();
+        filename = `${slug}.html`;
       } else {
-        // react project bundle
-        const files = exportReactBundle(document);
-        for (const [name, content] of Object.entries(files)) {
-          zip.file(name, content);
-        }
+        const data = await res.json();
+        blob = new Blob([JSON.stringify(data.files, null, 2)], { type: "application/json" });
+        filename = `${slug}-react-bundle.json`;
       }
-
-      const blob = await zip.generateAsync({ type: "blob" });
-      download(blob, `${slug}-${format}.zip`);
+      const url = URL.createObjectURL(blob);
+      const a = window.document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
     } finally {
       setExporting(false);
     }
@@ -95,71 +80,24 @@ export function Topbar({
       <div className="flex items-center gap-2.5 text-sm">
         <span className="font-medium text-zinc-100">WeBuild</span>
         <span className="text-zinc-700">/</span>
-        <span className="text-zinc-400">
-          {document?.meta.name ?? "Untitled"}
-        </span>
+        <span className="text-zinc-400">{document?.meta.name ?? "Untitled"}</span>
         {usedMock ? (
           <span className="rounded-md border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-[11px] text-amber-400">
             demo
           </span>
         ) : null}
-        {pages.length > 1 && (
-          <>
-            <span className="text-zinc-700">|</span>
-            <div className="flex items-center gap-0.5">
-              {pages.map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => setActivePage(p.id)}
-                  className={cn(
-                    "flex items-center gap-1 rounded-md px-2 py-0.5 text-xs transition-colors",
-                    p.id === activePageId
-                      ? "bg-zinc-800 text-zinc-100"
-                      : "text-zinc-500 hover:text-zinc-300",
-                  )}
-                >
-                  <FileText size={11} />
-                  {p.name}
-                </button>
-              ))}
-            </div>
-          </>
-        )}
       </div>
 
       <div className="flex items-center gap-1 rounded-lg border border-zinc-800 bg-[#141418] p-0.5">
-        <SegBtn
-          active={view === "design"}
-          onClick={() => onView("design")}
-          icon={Code2}
-          label="Design"
-        />
-        <SegBtn
-          active={view === "preview"}
-          onClick={() => onView("preview")}
-          icon={Eye}
-          label="Preview"
-        />
+        <SegBtn active={view === "design"} onClick={() => onView("design")} icon={Code2} label="Design" />
+        <SegBtn active={view === "preview"} onClick={() => onView("preview")} icon={Eye} label="Preview" />
       </div>
 
       <div className="flex items-center gap-2">
         <div className="hidden items-center gap-0.5 rounded-lg border border-zinc-800 bg-[#141418] p-0.5 md:flex">
-          <DeviceBtn
-            active={device === "desktop"}
-            onClick={() => onDevice("desktop")}
-            icon={Monitor}
-          />
-          <DeviceBtn
-            active={device === "tablet"}
-            onClick={() => onDevice("tablet")}
-            icon={Tablet}
-          />
-          <DeviceBtn
-            active={device === "mobile"}
-            onClick={() => onDevice("mobile")}
-            icon={Smartphone}
-          />
+          <DeviceBtn active={device === "desktop"} onClick={() => onDevice("desktop")} icon={Monitor} />
+          <DeviceBtn active={device === "tablet"} onClick={() => onDevice("tablet")} icon={Tablet} />
+          <DeviceBtn active={device === "mobile"} onClick={() => onDevice("mobile")} icon={Smartphone} />
         </div>
 
         <div className="flex items-center gap-0.5">
@@ -171,22 +109,19 @@ export function Topbar({
           </IconBtn>
         </div>
 
-        {/* Project & save controls */}
         <button
           type="button"
-          onClick={() => setShowProjects(true)}
-          className="flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800/50 px-2.5 py-1.5 text-xs text-zinc-300 transition-colors hover:bg-zinc-700"
+          onClick={() => setShowCollab(true)}
+          className="relative flex items-center gap-1.5 rounded-lg border border-zinc-700 px-2.5 py-1.5 text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-800 hover:text-zinc-100"
         >
-          <FolderOpen size={13} />
-          Projects
+          <Users size={14} />
+          <span className="hidden sm:inline">Collab</span>
+          {collabStatus === "connected" && (
+            <span className="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-green-500 px-1 text-[10px] font-bold text-white">
+              {1 + peerCount}
+            </span>
+          )}
         </button>
-        {projectId && lastSavedAt && (
-          <div className="flex items-center gap-1 text-[10px] text-zinc-600">
-            <Save size={10} />
-            Saved
-          </div>
-        )}
-        <UserMenu />
 
         <div className="relative">
           <button
@@ -200,45 +135,17 @@ export function Topbar({
             <ChevronDown size={14} />
           </button>
           {menuOpen ? (
-            <div className="absolute right-0 top-10 z-30 w-56 overflow-hidden rounded-xl border border-zinc-800 bg-[#141418] py-1 shadow-2xl">
-              <MenuItem
-                onClick={() => handleExport("html")}
-                icon={<Code2 size={14} />}
-                title="Single HTML"
-                subtitle="Current page as clean .html"
-              />
-              <MenuItem
-                onClick={() => handleExport("html-zip")}
-                icon={<FolderArchive size={14} />}
-                title="Full Site ZIP"
-                subtitle="All pages as .html files"
-              />
-              <MenuItem
-                onClick={() => handleExport("react")}
-                icon={<Code2 size={14} />}
-                title="React Project"
-                subtitle="Component files as .zip"
-              />
+            <div className="absolute right-0 top-10 z-30 w-52 overflow-hidden rounded-xl border border-zinc-800 bg-[#141418] py-1 shadow-2xl">
+              <MenuItem onClick={() => handleExport("html")} title="Static HTML" subtitle="Single clean .html file" />
+              <MenuItem onClick={() => handleExport("react")} title="React bundle" subtitle="Component file map (.json)" />
             </div>
           ) : null}
         </div>
       </div>
-      {showProjects && <ProjectList onClose={() => setShowProjects(false)} />}
+
+      {showCollab && <CollabPanel onClose={() => setShowCollab(false)} />}
     </header>
   );
-}
-
-/* ------------------------------------------------------------------ */
-/* Small sub-components                                                */
-/* ------------------------------------------------------------------ */
-
-function download(blob: Blob, filename: string) {
-  const url = URL.createObjectURL(blob);
-  const a = window.document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
 }
 
 function SegBtn({
@@ -258,9 +165,7 @@ function SegBtn({
       onClick={onClick}
       className={cn(
         "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
-        active
-          ? "bg-zinc-700 text-white"
-          : "text-zinc-400 hover:text-zinc-200",
+        active ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-zinc-200"
       )}
     >
       <IconCmp size={13} />
@@ -284,9 +189,7 @@ function DeviceBtn({
       onClick={onClick}
       className={cn(
         "flex h-7 w-7 items-center justify-center rounded-md transition-colors",
-        active
-          ? "bg-zinc-700 text-white"
-          : "text-zinc-500 hover:text-zinc-300",
+        active ? "bg-zinc-700 text-white" : "text-zinc-500 hover:text-zinc-300"
       )}
     >
       <IconCmp size={15} />
@@ -319,28 +222,15 @@ function IconBtn({
   );
 }
 
-function MenuItem({
-  onClick,
-  icon,
-  title,
-  subtitle,
-}: {
-  onClick: () => void;
-  icon: React.ReactNode;
-  title: string;
-  subtitle: string;
-}) {
+function MenuItem({ onClick, title, subtitle }: { onClick: () => void; title: string; subtitle: string }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-start gap-2.5 px-3 py-2 text-left transition-colors hover:bg-zinc-800"
+      className="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left transition-colors hover:bg-zinc-800"
     >
-      <span className="mt-0.5 text-zinc-400">{icon}</span>
-      <div className="flex flex-col gap-0.5">
-        <span className="text-sm text-zinc-100">{title}</span>
-        <span className="text-xs text-zinc-500">{subtitle}</span>
-      </div>
+      <span className="text-sm text-zinc-100">{title}</span>
+      <span className="text-xs text-zinc-500">{subtitle}</span>
     </button>
   );
 }
