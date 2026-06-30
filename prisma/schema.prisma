@@ -59,7 +59,8 @@ model User {
   createdAt DateTime  @default(now())
   accounts  Account[]
   sessions  Session[]
-  projects  Project[]
+  projects      Project[]
+  subscription   Subscription?
 }
 
 model Project {
@@ -100,4 +101,20 @@ model Asset {
   createdAt DateTime @default(now())
 
   @@index([projectId])
+}
+
+// ─── Billing ────────────────────────────────────────────────────────
+
+model Subscription {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan               String   @default("free") // "free" | "pro" | "studio"
+  stripeCustomerId   String?  @unique
+  stripeSubId        String?  @unique
+  stripePriceId      String?
+  status             String   @default("active") // "active" | "canceled" | "past_due"
+  currentPeriodEnd   DateTime?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
