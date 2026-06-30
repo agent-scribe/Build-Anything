@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AlertCircle, ArrowUp, Loader2, Moon, ShoppingBag, Sun } from "lucide-react";
+import { AlertCircle, ArrowUp, Loader2, Moon, ShoppingBag, Sparkles, Sun, Zap } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useEditorStore } from "@/lib/store/useEditorStore";
 
@@ -19,12 +19,28 @@ export function PromptComposer() {
   const plan = useEditorStore((s) => s.plan);
   const error = useEditorStore((s) => s.error);
   const hasDoc = useEditorStore((s) => Boolean(s.document));
+  const usedMock = useEditorStore((s) => s.usedMock);
 
   const [prompt, setPrompt] = React.useState("");
   const [mode, setMode] = React.useState<"light" | "dark">("light");
   const [ecommerce, setEcommerce] = React.useState(false);
+  const [aiAvailable, setAiAvailable] = React.useState<boolean | null>(null);
 
   const busy = status !== "idle" && status !== "error" && status !== "done";
+
+  // Probe server for AI capability on mount
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch("/api/status")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!cancelled) setAiAvailable(data.hasKey === true);
+      })
+      .catch(() => {
+        if (!cancelled) setAiAvailable(false);
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   async function submit() {
     const value = prompt.trim();
@@ -35,6 +51,23 @@ export function PromptComposer() {
   return (
     <div className="border-b border-zinc-800/80 bg-[#0e0e11] px-4 py-3">
       <div className="mx-auto max-w-3xl">
+        {/* AI status indicator */}
+        {aiAvailable !== null && (
+          <div className="mb-2 flex items-center gap-1.5 text-[11px]">
+            {aiAvailable ? (
+              <>
+                <Sparkles size={12} className="text-[#6d5efc]" />
+                <span className="text-[#a99bff]">AI generation active</span>
+              </>
+            ) : (
+              <>
+                <Zap size={12} className="text-amber-500" />
+                <span className="text-amber-400/80">Demo mode — using built-in sample</span>
+              </>
+            )}
+          </div>
+        )}
+
         <div className="rounded-2xl border border-zinc-800 bg-[#141418] focus-within:border-zinc-700">
           <textarea
             value={prompt}
@@ -106,6 +139,13 @@ export function PromptComposer() {
             <span>{error}</span>
           </div>
         ) : null}
+
+        {/* Show mock/AI indicator after generation */}
+        {hasDoc && status === "idle" && (
+          <div className="mt-1.5 text-[10px] text-zinc-600">
+            {usedMock ? "Generated from built-in sample" : "Generated with Claude AI"}
+          </div>
+        )}
       </div>
     </div>
   );
