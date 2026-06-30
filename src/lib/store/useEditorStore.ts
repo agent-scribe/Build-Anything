@@ -276,8 +276,8 @@ export const useEditorStore = create<EditorState>()(
 
         generate: async (brief) => {
           set((s) => {
-            s.status = "planning";
-            s.statusMessage = "Starting…";
+            s.status = "generating";
+            s.statusMessage = "Designing your site";
             s.error = null;
             s.streamPreview = "";
             s.plan = null;
@@ -287,37 +287,30 @@ export const useEditorStore = create<EditorState>()(
             const res = await fetch("/api/generate", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(brief),
+              body: JSON.stringify({ ...brief, stream: false }),
             });
-
-            if (!res.ok || !res.body) {
-              const detail = await res.json().catch(() => ({}));
-              throw new Error(detail.error ?? `Request failed (${res.status})`);
+            const data = (await res.json().catch(() => ({}))) as {
+              document?: SiteDocument;
+              usedMock?: boolean;
+              error?: string;
+            };
+            const doc = data.document;
+            if (!res.ok || !doc) {
+              throw new Error(data.error ?? `Request failed (${res.status})`);
             }
-
-            const reader = res.body.getReader();
-            const decoder = new TextDecoder();
-            let buffer = "";
-
-            for (;;) {
-              const { done, value } = await reader.read();
-              if (done) break;
-              buffer += decoder.decode(value, { stream: true });
-
-              const frames = buffer.split("\n\n");
-              buffer = frames.pop() ?? "";
-              for (const frame of frames) {
-                const dataLine = frame.split("\n").find((l) => l.startsWith("data: "));
-                if (!dataLine) continue;
-                const payload = dataLine.slice(6).trim();
-                if (!payload || payload === "{}") continue;
-                try {
-                  handleEvent(JSON.parse(payload) as GenerationEvent);
-                } catch {
-                  /* skip malformed frame */
-                }
-              }
-            }
+            set((s) => {
+              s.plan = doc.pages[0]?.sections.map((sec) => sec.type) ?? null;
+              s.status = "validating";
+              s.statusMessage = "Validating layout";
+            });
+            await new Promise((r) => setTimeout(r, 250));
+            get().setDocument(doc);
+            set((s) => {
+              s.status = "idle";
+              s.statusMessage = "";
+              s.usedMock = Boolean(data.usedMock);
+              s.streamPreview = "";
+            });
           } catch (err) {
             set((s) => {
               s.status = "error";

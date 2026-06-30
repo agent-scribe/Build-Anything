@@ -6,7 +6,8 @@
  * reads these to drive the status UI and, on the final `result` event,
  * loads the validated SiteDocument into the editor store.
  */
-import { runGenerationStream, type GenerationEvent } from "@/lib/ai/pipeline";
+import { runGeneration, runGenerationStream, type GenerationEvent } from "@/lib/ai/pipeline";
+import { hasAnthropicKey } from "@/lib/ai/client";
 import type { GenerationBrief } from "@/lib/ai/generator-prompt";
 
 export const runtime = "nodejs";
@@ -39,6 +40,19 @@ export async function POST(req: Request): Promise<Response> {
     ecommerce: body.ecommerce === true,
     styleHint: typeof body.styleHint === "string" ? body.styleHint : undefined,
   };
+
+  // Non-streaming path (reliable on all serverless platforms incl. Netlify):
+  // run the pipeline to completion and return the finished document as JSON.
+  if ((body as { stream?: unknown }).stream === false) {
+    const result = await runGeneration(brief);
+    if (result.ok) {
+      return Response.json({ document: result.document, usedMock: !hasAnthropicKey() });
+    }
+    return Response.json(
+      { error: "Could not produce a valid layout.", issues: result.issues },
+      { status: 422 }
+    );
+  }
 
   const encoder = new TextEncoder();
   const send = (controller: ReadableStreamDefaultController, event: GenerationEvent) =>
