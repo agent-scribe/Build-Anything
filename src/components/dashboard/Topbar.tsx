@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useEditorStore } from "@/lib/store/useEditorStore";
+import { renderSiteToHtml } from "@/lib/export/html";
+import { exportReactBundle } from "@/lib/export/react";
 import type { Device, ViewMode } from "./DashboardWorkspace";
 
 export function Topbar({
@@ -41,21 +43,15 @@ export function Topbar({
     setMenuOpen(false);
     setExporting(true);
     try {
-      const res = await fetch("/api/export", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ document, format }),
-      });
-      if (!res.ok) throw new Error("Export failed");
       const slug = document.meta.name.replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "site";
       let blob: Blob;
       let filename: string;
       if (format === "html") {
-        blob = await res.blob();
+        blob = new Blob([renderSiteToHtml(document)], { type: "text/html" });
         filename = `${slug}.html`;
       } else {
-        const data = await res.json();
-        blob = new Blob([JSON.stringify(data.files, null, 2)], { type: "application/json" });
+        const files = exportReactBundle(document);
+        blob = new Blob([JSON.stringify(files, null, 2)], { type: "application/json" });
         filename = `${slug}-react-bundle.json`;
       }
       const url = URL.createObjectURL(blob);
