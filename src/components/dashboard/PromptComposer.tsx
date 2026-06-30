@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { AlertCircle, ArrowUp, Loader2, Moon, ShoppingBag, Sparkles, Sun, Zap } from "lucide-react";
+import { AlertCircle, ArrowUp, LayoutGrid, Loader2, Moon, ShoppingBag, Sparkles, Sun, Zap } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useEditorStore } from "@/lib/store/useEditorStore";
+import { TemplatePicker } from "./TemplatePicker";
 
 const EXAMPLES = [
   "A premium minimalist skincare store with a sage-green palette",
@@ -25,6 +26,7 @@ export function PromptComposer() {
   const [mode, setMode] = React.useState<"light" | "dark">("light");
   const [ecommerce, setEcommerce] = React.useState(false);
   const [aiAvailable, setAiAvailable] = React.useState<boolean | null>(null);
+  const [showTemplates, setShowTemplates] = React.useState(false);
 
   const busy = status !== "idle" && status !== "error" && status !== "done";
 
@@ -104,6 +106,14 @@ export function PromptComposer() {
 
         {!hasDoc && status === "idle" ? (
           <div className="mt-2.5 flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={() => setShowTemplates(true)}
+              className="flex items-center gap-1.5 rounded-full border border-[#6d5efc]/30 bg-[#6d5efc]/10 px-3 py-1 text-xs font-medium text-[#a99bff] transition-colors hover:border-[#6d5efc]/50 hover:bg-[#6d5efc]/20"
+            >
+              <LayoutGrid size={12} />
+              Browse 1,001 Templates
+            </button>
             {EXAMPLES.map((ex) => (
               <button
                 key={ex}
@@ -114,6 +124,23 @@ export function PromptComposer() {
                 {ex}
               </button>
             ))}
+          </div>
+        ) : null}
+
+        {/* Also show templates button when a doc exists */}
+        {hasDoc && status === "idle" ? (
+          <div className="mt-1.5 flex items-center gap-3">
+            <span className="text-[10px] text-zinc-600">
+              {usedMock ? "Generated from built-in sample" : "Generated with Claude AI"}
+            </span>
+            <button
+              type="button"
+              onClick={() => setShowTemplates(true)}
+              className="flex items-center gap-1 text-[10px] text-[#a99bff] transition-colors hover:text-[#6d5efc]"
+            >
+              <LayoutGrid size={10} />
+              Templates
+            </button>
           </div>
         ) : null}
 
@@ -140,13 +167,12 @@ export function PromptComposer() {
           </div>
         ) : null}
 
-        {/* Show mock/AI indicator after generation */}
-        {hasDoc && status === "idle" && (
-          <div className="mt-1.5 text-[10px] text-zinc-600">
-            {usedMock ? "Generated from built-in sample" : "Generated with Claude AI"}
-          </div>
-        )}
       </div>
+
+      {/* Template picker modal */}
+      {showTemplates && (
+        <TemplatePicker onClose={() => setShowTemplates(false)} />
+      )}
     </div>
   );
 }
