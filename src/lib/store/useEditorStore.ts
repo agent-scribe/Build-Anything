@@ -61,16 +61,14 @@ const AUTOSAVE_DELAY = 3000; // 3 seconds after last edit
 
 function scheduleAutosave(projectId: string, doc: SiteDocument) {
   if (autosaveTimer) clearTimeout(autosaveTimer);
-  autosaveTimer = setTimeout(async () => {
+  autosaveTimer = setTimeout(() => {
     try {
-      await fetch(`/api/projects/${projectId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ document: doc }),
-      });
+      // Use mock-db (localStorage) for persistence
+      const { saveProject } = require("@/lib/mock-db/projects");
+      saveProject(doc, projectId);
       useEditorStore.setState({ lastSavedAt: Date.now() });
     } catch {
-      // silently fail — server might be unreachable
+      // silently fail
     }
   }, AUTOSAVE_DELAY);
 }

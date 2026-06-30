@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Trash2, X, Info } from "lucide-react";
 import { useCart, formatMoney } from "@/lib/ecommerce/cart";
+import { useRouter } from "next/navigation";
 
 export function CartDrawer() {
   const lines = useCart((s) => s.lines);
@@ -10,29 +11,12 @@ export function CartDrawer() {
   const setOpen = useCart((s) => s.setOpen);
   const remove = useCart((s) => s.remove);
   const setQuantity = useCart((s) => s.setQuantity);
-  const clear = useCart((s) => s.clear);
   const { count, subtotal, currency } = useCart((s) => s.totals());
-  const [checking, setChecking] = React.useState(false);
+  const router = useRouter();
 
-  async function handleCheckout() {
-    setChecking(true);
-    try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lines }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert(data.error ?? "Checkout failed");
-      }
-    } catch {
-      alert("Network error — please try again.");
-    } finally {
-      setChecking(false);
-    }
+  function handleCheckout() {
+    setOpen(false);
+    router.push("/checkout/success");
   }
 
   if (!isOpen) return null;
@@ -87,12 +71,19 @@ export function CartDrawer() {
 
         {lines.length > 0 && (
           <div className="border-t border-zinc-800 p-5">
-            <div className="mb-4 flex items-center justify-between">
+            {/* Demo note */}
+            <div className="mb-3 flex items-start gap-2 rounded-lg border border-amber-500/20 bg-amber-500/5 px-3 py-2">
+              <Info size={12} className="mt-0.5 shrink-0 text-amber-400" />
+              <p className="text-[10px] text-amber-300/80">
+                <strong>Demo:</strong> This simulates checkout. A buyer connects their Stripe keys for real payments.
+              </p>
+            </div>
+            <div className="mb-3 flex items-center justify-between">
               <span className="text-sm text-zinc-400">Total</span>
               <span className="text-lg font-semibold text-zinc-100">{formatMoney(subtotal, currency)}</span>
             </div>
-            <button type="button" onClick={handleCheckout} disabled={checking} className="w-full rounded-xl bg-[#6d5efc] py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50">
-              {checking ? "Redirecting to Stripe…" : "Checkout"}
+            <button type="button" onClick={handleCheckout} className="w-full rounded-xl bg-[#6d5efc] py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+              Checkout (Demo)
             </button>
           </div>
         )}

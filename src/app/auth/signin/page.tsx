@@ -1,15 +1,26 @@
 "use client";
 
-import { signIn, getProviders } from "next-auth/react";
 import * as React from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Info } from "lucide-react";
+import { useMockAuth } from "@/lib/mock-auth/context";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
-  const [providers, setProviders] = React.useState<Record<string, { id: string; name: string }> | null>(null);
+  const { signIn, user } = useMockAuth();
+  const router = useRouter();
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
 
   React.useEffect(() => {
-    getProviders().then((p) => setProviders(p as Record<string, { id: string; name: string }> | null));
-  }, []);
+    if (user) router.push("/dashboard");
+  }, [user, router]);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim() || !email.trim()) return;
+    signIn(name.trim(), email.trim());
+    router.push("/dashboard");
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#0b0b0e]">
@@ -21,24 +32,43 @@ export default function SignInPage() {
         <p className="mb-6 text-center text-sm text-zinc-400">
           Sign in to save your projects and access them anywhere.
         </p>
-        <div className="flex flex-col gap-3">
-          {providers ? (
-            Object.values(providers).map((provider) => (
-              <button
-                key={provider.id}
-                type="button"
-                onClick={() => signIn(provider.id, { callbackUrl: "/" })}
-                className="flex items-center justify-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2.5 text-sm font-medium text-zinc-100 transition-colors hover:bg-zinc-700"
-              >
-                Continue with {provider.name}
-              </button>
-            ))
-          ) : (
-            <div className="text-center text-sm text-zinc-500">Loading…</div>
-          )}
+
+        {/* Demo mode banner */}
+        <div className="mb-5 flex items-start gap-2 rounded-lg border border-amber-500/20 bg-amber-500/5 px-3 py-2.5">
+          <Info size={14} className="mt-0.5 shrink-0 text-amber-400" />
+          <p className="text-xs text-amber-300/80">
+            <strong>Demo Mode:</strong> This uses local authentication. 
+            The buyer can connect real OAuth providers (Google, GitHub) by adding their API keys.
+          </p>
         </div>
-        <p className="mt-6 text-center text-xs text-zinc-600">
-          No account needed — signing in creates one automatically.
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            required
+            className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-[#6d5efc]/50 focus:outline-none"
+          />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="your@email.com"
+            required
+            className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-[#6d5efc]/50 focus:outline-none"
+          />
+          <button
+            type="submit"
+            className="mt-1 rounded-lg bg-[#6d5efc] py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          >
+            Sign In
+          </button>
+        </form>
+
+        <p className="mt-5 text-center text-xs text-zinc-600">
+          Data is saved locally in your browser.
         </p>
       </div>
     </div>

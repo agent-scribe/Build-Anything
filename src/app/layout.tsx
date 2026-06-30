@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { AuthProvider } from "@/components/AuthProvider";
+import { MockAuthProvider } from "@/lib/mock-auth/context";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <MockAuthProvider>{children}</MockAuthProvider>
       </body>
     </html>
   );

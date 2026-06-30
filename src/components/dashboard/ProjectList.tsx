@@ -1,68 +1,42 @@
 "use client";
 
 import * as React from "react";
-import { useSession } from "next-auth/react";
-import { Plus, FolderOpen, Trash2, Loader2 } from "lucide-react";
+import { useMockAuth } from "@/lib/mock-auth/context";
+import { listProjects, getProject, saveProject, deleteProject, type SavedProject } from "@/lib/mock-db/projects";
 import { useEditorStore } from "@/lib/store/useEditorStore";
-
-interface ProjectSummary {
-  id: string;
-  name: string;
-  industry: string | null;
-  updatedAt: string;
-}
+import { Plus, FolderOpen, Trash2, Info } from "lucide-react";
 
 export function ProjectList({ onClose }: { onClose: () => void }) {
-  const { data: session } = useSession();
-  const [projects, setProjects] = React.useState<ProjectSummary[]>([]);
-  const [loading, setLoading] = React.useState(true);
-  const loadDocument = useEditorStore((s) => s.loadDocument);
+  const { user } = useMockAuth();
+  const [projects, setProjects] = React.useState<SavedProject[]>([]);
   const document = useEditorStore((s) => s.document);
+  const loadDocument = useEditorStore((s) => s.loadDocument);
   const setProjectId = useEditorStore((s) => s.setProjectId);
 
   React.useEffect(() => {
-    if (!session) return;
-    fetch("/api/projects")
-      .then((r) => r.json())
-      .then((data) => setProjects(data.projects ?? []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [session]);
+    setProjects(listProjects());
+  }, []);
 
-  async function openProject(id: string) {
-    const res = await fetch(`/api/projects/${id}`);
-    if (!res.ok) return;
-    const { project } = await res.json();
+  function openProject(id: string) {
+    const project = getProject(id);
+    if (!project) return;
     loadDocument(project.document, false);
     setProjectId(project.id);
     onClose();
   }
 
-  async function deleteProject(id: string) {
+  function handleDelete(id: string) {
     if (!confirm("Delete this project?")) return;
-    await fetch(`/api/projects/${id}`, { method: "DELETE" });
-    setProjects((prev) => prev.filter((p) => p.id !== id));
+    deleteProject(id);
+    setProjects(listProjects());
   }
 
-  async function saveCurrentAsNew() {
+  function saveCurrentAsNew() {
     if (!document) return;
-    const res = await fetch("/api/projects", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: document.meta.name,
-        industry: document.meta.industry,
-        document,
-      }),
-    });
-    if (res.ok) {
-      const { project } = await res.json();
-      setProjectId(project.id);
-      onClose();
-    }
+    const project = saveProject(document);
+    setProjectId(project.id);
+    onClose();
   }
-
-  if (!session) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
@@ -90,12 +64,17 @@ export function ProjectList({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
+        {/* Demo mode note */}
+        <div className="mx-4 mt-3 flex items-start gap-2 rounded-lg border border-amber-500/20 bg-amber-500/5 px-3 py-2">
+          <Info size={13} className="mt-0.5 shrink-0 text-amber-400" />
+          <p className="text-[11px] text-amber-300/80">
+            <strong>Demo:</strong> Projects are saved in your browser. 
+            A buyer can connect a real database for cloud persistence.
+          </p>
+        </div>
+
         <div className="max-h-[60vh] overflow-y-auto p-2">
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 size={20} className="animate-spin text-zinc-500" />
-            </div>
-          ) : projects.length === 0 ? (
+          {projects.length === 0 ? (
             <div className="py-12 text-center text-sm text-zinc-500">
               No saved projects yet. Generate a site and save it!
             </div>
@@ -122,7 +101,7 @@ export function ProjectList({ onClose }: { onClose: () => void }) {
                   </button>
                   <button
                     type="button"
-                    onClick={() => deleteProject(p.id)}
+                    onClick={() => handleDelete(p.id)}
                     className="rounded-md p-1.5 text-zinc-600 transition-colors hover:bg-red-500/10 hover:text-red-400"
                   >
                     <Trash2 size={14} />
