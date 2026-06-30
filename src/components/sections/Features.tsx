@@ -1,5 +1,6 @@
 import type { SectionOf } from "@/lib/schema/page-schema";
 import { HeadingBlock, Icon, SectionShell } from "./_shared";
+import { EditableText } from "@/lib/store/InlineEditContext";
 
 const COLS: Record<2 | 3 | 4, string> = {
   2: "sm:grid-cols-2",
@@ -31,12 +32,22 @@ export function Features({ section }: { section: SectionOf<"features"> }) {
             >
               <Icon name={f.icon} size={20} strokeWidth={1.75} />
             </div>
-            <h3 className="text-lg font-medium" style={{ fontFamily: "var(--wb-font-heading)" }}>
-              {f.title}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--wb-muted-fg)" }}>
-              {f.description}
-            </p>
+            <EditableText
+              sectionId={section.id}
+              propPath={`items.${i}.title`}
+              value={f.title}
+              as="h3"
+              className="text-lg font-medium"
+              style={{ fontFamily: "var(--wb-font-heading)" }}
+            />
+            <EditableText
+              sectionId={section.id}
+              propPath={`items.${i}.description`}
+              value={f.description}
+              as="p"
+              className="mt-2 text-sm leading-relaxed"
+              style={{ color: "var(--wb-muted-fg)" }}
+            />
           </div>
         ))}
       </div>

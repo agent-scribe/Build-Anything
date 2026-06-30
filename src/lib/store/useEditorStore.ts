@@ -115,6 +115,7 @@ interface EditorState {
 
   // engine
   generate: (brief: GenerationBrief) => Promise<void>;
+  aiEditSection: (sectionId: string, instruction: string) => Promise<void>;
 }
 
 const HISTORY_LIMIT = 50;
@@ -306,6 +307,55 @@ export const useEditorStore = create<EditorState>()(
 
         canUndo: () => get().past.length > 0,
         canRedo: () => get().future.length > 0,
+
+        aiEditSection: async (sectionId, instruction) => {
+          const state = get();
+          if (!state.document) return;
+          const page = state.document.pages.find((p) => p.id === state.activePageId) ?? state.document.pages[0];
+          const section = page?.sections.find((s) => s.id === sectionId);
+          if (!section) return;
+
+          set((s) => { s.status = "generating"; s.statusMessage = "AI is editing…"; s.error = null; });
+
+          try {
+            const res = await fetch("/api/edit", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                instruction,
+                sectionType: section.type,
+                currentProps: section.props,
+                theme: state.document.theme,
+              }),
+            });
+
+            if (!res.ok) {
+              const detail = await res.json().catch(() => ({}));
+              throw new Error(detail.error ?? `Edit failed (${res.status})`);
+            }
+
+            const { props } = await res.json();
+            if (props && typeof props === "object") {
+              // Commit through the normal history-tracked path
+              const current = get().document;
+              if (!current) return;
+              set((s) => {
+                s.past.push(structuredClone(current));
+                if (s.past.length > HISTORY_LIMIT) s.past.shift();
+                s.future = [];
+                const pg = s.document!.pages.find((p) => p.id === s.activePageId) ?? s.document!.pages[0];
+                const sec = pg?.sections.find((sc) => sc.id === sectionId);
+                if (sec) Object.assign(sec.props as Record<string, unknown>, props);
+              });
+            }
+            set((s) => { s.status = "idle"; s.statusMessage = ""; });
+          } catch (err) {
+            set((s) => {
+              s.status = "error";
+              s.error = err instanceof Error ? err.message : "AI edit failed";
+            });
+          }
+        },
 
         generate: async (brief) => {
           set((s) => {

@@ -1,5 +1,6 @@
 import type { SectionOf } from "@/lib/schema/page-schema";
 import { SectionShell, SiteButton } from "./_shared";
+import { EditableText } from "@/lib/store/InlineEditContext";
 
 export function CTA({ section }: { section: SectionOf<"cta"> }) {
   const { headline, subheadline, primaryCta, secondaryCta } = section.props;
@@ -15,14 +16,22 @@ export function CTA({ section }: { section: SectionOf<"cta"> }) {
         }
       >
         <div className={split ? "" : "mx-auto max-w-2xl"}>
-          <h2
+          <EditableText
+            sectionId={section.id}
+            propPath="headline"
+            value={headline}
+            as="h2"
             className="text-3xl font-semibold tracking-tight md:text-4xl"
             style={{ fontFamily: "var(--wb-font-heading)" }}
-          >
-            {headline}
-          </h2>
+          />
           {subheadline ? (
-            <p className="mt-3 text-lg opacity-90">{subheadline}</p>
+            <EditableText
+              sectionId={section.id}
+              propPath="subheadline"
+              value={subheadline}
+              as="p"
+              className="mt-3 text-lg opacity-90"
+            />
           ) : null}
         </div>
         <div className={`flex flex-wrap gap-3 ${split ? "" : "mt-8 justify-center"}`}>

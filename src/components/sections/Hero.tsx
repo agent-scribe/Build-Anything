@@ -1,5 +1,6 @@
 import type { SectionOf } from "@/lib/schema/page-schema";
 import { ImagePlaceholder, SectionShell, SiteButton } from "./_shared";
+import { EditableText } from "@/lib/store/InlineEditContext";
 
 export function Hero({ section }: { section: SectionOf<"hero"> }) {
   const { eyebrow, headline, subheadline, primaryCta, secondaryCta, image } = section.props;
@@ -9,25 +10,31 @@ export function Hero({ section }: { section: SectionOf<"hero"> }) {
   const copy = (
     <div className={split ? "max-w-xl" : "mx-auto max-w-3xl text-center"}>
       {eyebrow ? (
-        <span
+        <EditableText
+          sectionId={section.id}
+          propPath="eyebrow"
+          value={eyebrow}
+          as="span"
           className="mb-4 inline-block text-xs font-medium uppercase tracking-wider"
           style={{ color: "var(--wb-accent)" }}
-        >
-          {eyebrow}
-        </span>
+        />
       ) : null}
-      <h1
+      <EditableText
+        sectionId={section.id}
+        propPath="headline"
+        value={headline}
+        as="h1"
         className="text-4xl font-semibold leading-[1.1] tracking-tight md:text-6xl"
         style={{ fontFamily: "var(--wb-font-heading)" }}
-      >
-        {headline}
-      </h1>
-      <p
+      />
+      <EditableText
+        sectionId={section.id}
+        propPath="subheadline"
+        value={subheadline}
+        as="p"
         className={`mt-5 text-lg md:text-xl ${split ? "" : "mx-auto"} max-w-2xl`}
         style={{ color: "var(--wb-muted-fg)" }}
-      >
-        {subheadline}
-      </p>
+      />
       <div className={`mt-8 flex flex-wrap gap-3 ${split ? "" : "justify-center"}`}>
         <SiteButton link={primaryCta} />
         {secondaryCta ? <SiteButton link={secondaryCta} /> : null}
