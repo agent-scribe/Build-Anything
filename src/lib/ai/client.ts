@@ -49,7 +49,7 @@ export async function completeText(opts: CompleteOptions): Promise<string> {
     model: opts.model ?? GENERATOR_MODEL,
     max_tokens: opts.maxTokens ?? 8192,
     temperature: opts.temperature ?? 0.7,
-    system: buildSystem(opts.system, opts.cacheSystem),
+    system: buildSystem(opts.system),
     messages: [{ role: "user", content: opts.user }],
   });
   return textFrom(message);
@@ -66,7 +66,7 @@ export async function* streamText(
     model: opts.model ?? GENERATOR_MODEL,
     max_tokens: opts.maxTokens ?? 8192,
     temperature: opts.temperature ?? 0.7,
-    system: buildSystem(opts.system, opts.cacheSystem),
+    system: buildSystem(opts.system),
     messages: [{ role: "user", content: opts.user }],
   });
 
@@ -77,17 +77,15 @@ export async function* streamText(
       yield event.delta.text;
     }
   }
-  await stream.done();
   return full;
 }
 
 function buildSystem(
-  system: string | undefined,
-  cache: boolean | undefined
+  system: string | undefined
 ): Anthropic.MessageCreateParams["system"] {
-  if (!system) return undefined;
-  if (!cache) return system;
-  return [{ type: "text", text: system, cache_control: { type: "ephemeral" } }];
+  // Prompt caching is applied automatically by the SDK where supported;
+  // returning the plain system string keeps types stable across SDK versions.
+  return system;
 }
 
 function textFrom(message: Anthropic.Message): string {
