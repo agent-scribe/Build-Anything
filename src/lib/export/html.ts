@@ -315,3 +315,19 @@ ${sections}
 </body>
 </html>`;
 }
+
+/* ------------------------------------------------------------------ */
+/* Multi-page export — one HTML file per page                          */
+/* ------------------------------------------------------------------ */
+
+/** Render all pages to a map of { filename: htmlContent }. */
+export function renderMultiPageHtml(doc: SiteDocument): Record<string, string> {
+  const files: Record<string, string> = {};
+  for (const page of doc.pages) {
+    const singlePageDoc: SiteDocument = { ...doc, pages: [page] };
+    const html = renderSiteToHtml(singlePageDoc);
+    const filename = page.path === "/" ? "index.html" : `${page.path.replace(/^\//, "").replace(/\//g, "-")}.html`;
+    files[filename] = html;
+  }
+  return files;
+}

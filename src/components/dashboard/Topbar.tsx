@@ -6,6 +6,7 @@ import {
   Code2,
   FileText,
   Eye,
+  FolderArchive,
   Monitor,
   Redo2,
   Smartphone,
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useEditorStore } from "@/lib/store/useEditorStore";
-import { renderSiteToHtml } from "@/lib/export/html";
+import { renderSiteToHtml, renderMultiPageHtml } from "@/lib/export/html";
 import { exportReactBundle } from "@/lib/export/react";
 import type { Device, ViewMode } from "./DashboardWorkspace";
 
@@ -42,28 +43,42 @@ export function Topbar({
   const [exporting, setExporting] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
 
-  async function handleExport(format: "html" | "react") {
+  async function handleExport(format: "html" | "html-zip" | "react") {
     if (!document) return;
     setMenuOpen(false);
     setExporting(true);
     try {
-      const slug = document.meta.name.replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "site";
-      let blob: Blob;
-      let filename: string;
+      const slug =
+        document.meta.name.replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "site";
+
       if (format === "html") {
-        blob = new Blob([renderSiteToHtml(document)], { type: "text/html" });
-        filename = `${slug}.html`;
-      } else {
-        const files = exportReactBundle(document);
-        blob = new Blob([JSON.stringify(files, null, 2)], { type: "application/json" });
-        filename = `${slug}-react-bundle.json`;
+        // Single-page current HTML
+        const blob = new Blob([renderSiteToHtml(document)], {
+          type: "text/html",
+        });
+        download(blob, `${slug}.html`);
+        return;
       }
-      const url = URL.createObjectURL(blob);
-      const a = window.document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(url);
+
+      // Both zip formats need JSZip
+      const { default: JSZip } = await import("jszip");
+      const zip = new JSZip();
+
+      if (format === "html-zip") {
+        const htmlFiles = renderMultiPageHtml(document);
+        for (const [name, content] of Object.entries(htmlFiles)) {
+          zip.file(name, content);
+        }
+      } else {
+        // react project bundle
+        const files = exportReactBundle(document);
+        for (const [name, content] of Object.entries(files)) {
+          zip.file(name, content);
+        }
+      }
+
+      const blob = await zip.generateAsync({ type: "blob" });
+      download(blob, `${slug}-${format}.zip`);
     } finally {
       setExporting(false);
     }
@@ -74,7 +89,9 @@ export function Topbar({
       <div className="flex items-center gap-2.5 text-sm">
         <span className="font-medium text-zinc-100">WeBuild</span>
         <span className="text-zinc-700">/</span>
-        <span className="text-zinc-400">{document?.meta.name ?? "Untitled"}</span>
+        <span className="text-zinc-400">
+          {document?.meta.name ?? "Untitled"}
+        </span>
         {usedMock ? (
           <span className="rounded-md border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-[11px] text-amber-400">
             demo
@@ -93,7 +110,7 @@ export function Topbar({
                     "flex items-center gap-1 rounded-md px-2 py-0.5 text-xs transition-colors",
                     p.id === activePageId
                       ? "bg-zinc-800 text-zinc-100"
-                      : "text-zinc-500 hover:text-zinc-300"
+                      : "text-zinc-500 hover:text-zinc-300",
                   )}
                 >
                   <FileText size={11} />
@@ -106,15 +123,37 @@ export function Topbar({
       </div>
 
       <div className="flex items-center gap-1 rounded-lg border border-zinc-800 bg-[#141418] p-0.5">
-        <SegBtn active={view === "design"} onClick={() => onView("design")} icon={Code2} label="Design" />
-        <SegBtn active={view === "preview"} onClick={() => onView("preview")} icon={Eye} label="Preview" />
+        <SegBtn
+          active={view === "design"}
+          onClick={() => onView("design")}
+          icon={Code2}
+          label="Design"
+        />
+        <SegBtn
+          active={view === "preview"}
+          onClick={() => onView("preview")}
+          icon={Eye}
+          label="Preview"
+        />
       </div>
 
       <div className="flex items-center gap-2">
         <div className="hidden items-center gap-0.5 rounded-lg border border-zinc-800 bg-[#141418] p-0.5 md:flex">
-          <DeviceBtn active={device === "desktop"} onClick={() => onDevice("desktop")} icon={Monitor} />
-          <DeviceBtn active={device === "tablet"} onClick={() => onDevice("tablet")} icon={Tablet} />
-          <DeviceBtn active={device === "mobile"} onClick={() => onDevice("mobile")} icon={Smartphone} />
+          <DeviceBtn
+            active={device === "desktop"}
+            onClick={() => onDevice("desktop")}
+            icon={Monitor}
+          />
+          <DeviceBtn
+            active={device === "tablet"}
+            onClick={() => onDevice("tablet")}
+            icon={Tablet}
+          />
+          <DeviceBtn
+            active={device === "mobile"}
+            onClick={() => onDevice("mobile")}
+            icon={Smartphone}
+          />
         </div>
 
         <div className="flex items-center gap-0.5">
@@ -138,15 +177,44 @@ export function Topbar({
             <ChevronDown size={14} />
           </button>
           {menuOpen ? (
-            <div className="absolute right-0 top-10 z-30 w-52 overflow-hidden rounded-xl border border-zinc-800 bg-[#141418] py-1 shadow-2xl">
-              <MenuItem onClick={() => handleExport("html")} title="Static HTML" subtitle="Single clean .html file" />
-              <MenuItem onClick={() => handleExport("react")} title="React bundle" subtitle="Component file map (.json)" />
+            <div className="absolute right-0 top-10 z-30 w-56 overflow-hidden rounded-xl border border-zinc-800 bg-[#141418] py-1 shadow-2xl">
+              <MenuItem
+                onClick={() => handleExport("html")}
+                icon={<Code2 size={14} />}
+                title="Single HTML"
+                subtitle="Current page as clean .html"
+              />
+              <MenuItem
+                onClick={() => handleExport("html-zip")}
+                icon={<FolderArchive size={14} />}
+                title="Full Site ZIP"
+                subtitle="All pages as .html files"
+              />
+              <MenuItem
+                onClick={() => handleExport("react")}
+                icon={<Code2 size={14} />}
+                title="React Project"
+                subtitle="Component files as .zip"
+              />
             </div>
           ) : null}
         </div>
       </div>
     </header>
   );
+}
+
+/* ------------------------------------------------------------------ */
+/* Small sub-components                                                */
+/* ------------------------------------------------------------------ */
+
+function download(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = window.document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function SegBtn({
@@ -166,7 +234,9 @@ function SegBtn({
       onClick={onClick}
       className={cn(
         "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
-        active ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-zinc-200"
+        active
+          ? "bg-zinc-700 text-white"
+          : "text-zinc-400 hover:text-zinc-200",
       )}
     >
       <IconCmp size={13} />
@@ -190,7 +260,9 @@ function DeviceBtn({
       onClick={onClick}
       className={cn(
         "flex h-7 w-7 items-center justify-center rounded-md transition-colors",
-        active ? "bg-zinc-700 text-white" : "text-zinc-500 hover:text-zinc-300"
+        active
+          ? "bg-zinc-700 text-white"
+          : "text-zinc-500 hover:text-zinc-300",
       )}
     >
       <IconCmp size={15} />
@@ -223,15 +295,28 @@ function IconBtn({
   );
 }
 
-function MenuItem({ onClick, title, subtitle }: { onClick: () => void; title: string; subtitle: string }) {
+function MenuItem({
+  onClick,
+  icon,
+  title,
+  subtitle,
+}: {
+  onClick: () => void;
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left transition-colors hover:bg-zinc-800"
+      className="flex w-full items-start gap-2.5 px-3 py-2 text-left transition-colors hover:bg-zinc-800"
     >
-      <span className="text-sm text-zinc-100">{title}</span>
-      <span className="text-xs text-zinc-500">{subtitle}</span>
+      <span className="mt-0.5 text-zinc-400">{icon}</span>
+      <div className="flex flex-col gap-0.5">
+        <span className="text-sm text-zinc-100">{title}</span>
+        <span className="text-xs text-zinc-500">{subtitle}</span>
+      </div>
     </button>
   );
 }
