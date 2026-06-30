@@ -44,7 +44,7 @@ const FEATURES = [
   },
   {
     icon: LayoutGrid,
-    title: "1,001 Templates",
+    title: "2,001 Templates",
     description:
       "Browse templates across 19 categories. Fashion, SaaS, restaurants, portfolios — pick one and customize.",
   },
@@ -72,7 +72,7 @@ const STEPS = [
 const TESTIMONIALS = [
   { quote: "I built my entire Shopify replacement in 20 minutes. The AI nailed my brand voice.", author: "Sarah K.", role: "E-commerce Founder" },
   { quote: "We used to spend $5K on landing pages. WeBuild does it in one prompt.", author: "Marcus T.", role: "Marketing Director" },
-  { quote: "The template library is insane. 1,001 starting points and I always find something close.", author: "Priya R.", role: "Freelance Designer" },
+  { quote: "The template library is insane. 2,001 starting points and I always find something close.", author: "Priya R.", role: "Freelance Designer" },
   { quote: "Export as Next.js is a game changer. I get a real codebase, not some locked-in builder.", author: "Jake L.", role: "Full-Stack Developer" },
 ];
 
@@ -165,7 +165,7 @@ export default function LandingPage() {
         <div className="relative mx-auto max-w-4xl px-4 text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#6d5efc]/30 bg-[#6d5efc]/10 px-4 py-1.5 text-sm text-[#a99bff]">
             <Sparkles size={14} />
-            1,001 templates &middot; 22 section types &middot; AI generation
+            2,001 templates &middot; 22 section types &middot; AI generation
           </div>
           <h1 className="text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
             Prompt to website
@@ -268,7 +268,7 @@ export default function LandingPage() {
       <section id="templates" className="bg-[#0a0a0d] py-20">
         <div className="mx-auto max-w-5xl px-4">
           <h2 className="mb-4 text-center text-3xl font-bold md:text-4xl">
-            1,001 templates, 19 categories
+            2,001 templates, 19 categories
           </h2>
           <p className="mx-auto mb-8 max-w-xl text-center text-zinc-400">
             Professional designs for every industry. Pick one, customize it, and launch.

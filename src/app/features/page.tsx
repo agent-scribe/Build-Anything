@@ -64,7 +64,7 @@ const SECTIONS = [
     ],
   },
   {
-    title: "1,001 Starter Templates",
+    title: "2,001 Starter Templates",
     description:
       "Browse a curated library across 19 categories. E-commerce, SaaS, restaurants, portfolios, health, legal, finance, and more. One click to load.",
     icon: LayoutGrid,

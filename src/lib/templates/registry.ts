@@ -1,5 +1,5 @@
 /**
- * registry.ts — Query, search, and filter the 1001-template catalog.
+ * registry.ts — Query, search, and filter the 2001-template catalog.
  * Lazily builds full SiteDocuments only when requested.
  */
 

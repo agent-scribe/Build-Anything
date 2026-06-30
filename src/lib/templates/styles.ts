@@ -12,7 +12,7 @@ export interface StylePreset {
   theme: Omit<Theme, "density">;
 }
 
-/** 11 visual styles × ~100 niches = 1001+ templates. */
+/** 11 visual styles × ~100 niches = 2001+ templates. */
 export const STYLE_PRESETS: StylePreset[] = [
   {
     id: "minimal-light",

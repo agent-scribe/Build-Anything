@@ -1,6 +1,6 @@
 /**
  * types.ts — Template system type definitions.
- * Expanded categories covering 15+ industries for 1001 templates.
+ * Expanded categories covering 15+ industries for 2001 templates.
  */
 
 import type { SiteDocument } from "@/lib/schema/page-schema";

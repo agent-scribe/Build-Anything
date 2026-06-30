@@ -112,7 +112,7 @@ export function PromptComposer() {
               className="flex items-center gap-1.5 rounded-full border border-[#6d5efc]/30 bg-[#6d5efc]/10 px-3 py-1 text-xs font-medium text-[#a99bff] transition-colors hover:border-[#6d5efc]/50 hover:bg-[#6d5efc]/20"
             >
               <LayoutGrid size={12} />
-              Browse 1,001 Templates
+              Browse 2,001 Templates
             </button>
             {EXAMPLES.map((ex) => (
               <button
