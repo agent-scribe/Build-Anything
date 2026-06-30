@@ -35,7 +35,7 @@ export function Products({
             style={{ background: "var(--wb-card)", border: "1px solid var(--wb-border)" }}
           >
             <div className="relative">
-              <ImagePlaceholder alt={product.image.alt} ratio="aspect-square" className="!rounded-none" />
+              <ImagePlaceholder src={product.image.src} alt={product.image.alt} ratio="aspect-square" className="!rounded-none" />
               {product.badge ? (
                 <span
                   className="absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-medium"

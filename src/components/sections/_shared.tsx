@@ -9,6 +9,7 @@ import { icons as lucideIcons } from "lucide-react";
 import type { LucideProps } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { Link as LinkModel, Section, Theme } from "@/lib/schema/page-schema";
+import { isUnsplashToken, resolveImageSrc } from "@/lib/images/unsplash";
 
 /* ---- theme → CSS variables ---- */
 
@@ -153,14 +154,49 @@ export function Icon({ name, ...props }: { name: string } & LucideProps) {
 /* ---- styled image placeholder (export + canvas share the look) ---- */
 
 export function ImagePlaceholder({
+  src,
   alt,
   className,
   ratio = "aspect-[4/3]",
 }: {
+  src?: string;
   alt: string;
   className?: string;
   ratio?: string;
 }) {
+  const resolvedSrc = src ? resolveImageSrc(src) : null;
+  const hasImage = resolvedSrc && !isUnsplashToken(resolvedSrc);
+
+  if (hasImage) {
+    return (
+      <div className={cn("overflow-hidden rounded-[var(--wb-radius)]", ratio, className)}>
+        <img
+          src={resolvedSrc}
+          alt={alt}
+          loading="lazy"
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            // Fall back to placeholder on load error
+            const target = e.currentTarget;
+            target.style.display = "none";
+            const parent = target.parentElement;
+            if (parent) {
+              parent.style.background = "var(--wb-muted)";
+              parent.style.color = "var(--wb-muted-fg)";
+              parent.style.display = "flex";
+              parent.style.alignItems = "center";
+              parent.style.justifyContent = "center";
+              const span = document.createElement("span");
+              span.className = "px-3 text-center text-xs";
+              span.textContent = alt;
+              parent.appendChild(span);
+            }
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       role="img"

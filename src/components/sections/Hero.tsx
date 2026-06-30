@@ -46,7 +46,7 @@ export function Hero({ section }: { section: SectionOf<"hero"> }) {
     return (
       <SectionShell section={section}>
         {copy}
-        {image ? <ImagePlaceholder alt={image.alt} ratio="aspect-[16/9]" className="mt-14" /> : null}
+        {image ? <ImagePlaceholder src={image.src} alt={image.alt} ratio="aspect-[16/9]" className="mt-14" /> : null}
       </SectionShell>
     );
   }
@@ -57,7 +57,7 @@ export function Hero({ section }: { section: SectionOf<"hero"> }) {
         className={`grid items-center gap-10 md:grid-cols-2 ${reverse ? "md:[&>*:first-child]:order-2" : ""}`}
       >
         {copy}
-        <ImagePlaceholder alt={image?.alt ?? "Hero image"} ratio="aspect-square" />
+        <ImagePlaceholder src={image?.src} alt={image?.alt ?? "Hero image"} ratio="aspect-square" />
       </div>
     </SectionShell>
   );
