@@ -19,6 +19,9 @@ import { useEditorStore } from "@/lib/store/useEditorStore";
 import { renderSiteToHtml, renderMultiPageHtml } from "@/lib/export/html";
 import { exportReactBundle } from "@/lib/export/react";
 import type { Device, ViewMode } from "./DashboardWorkspace";
+import { UserMenu } from "./UserMenu";
+import { ProjectList } from "./ProjectList";
+import { FolderOpen, Save } from "lucide-react";
 
 export function Topbar({
   view,
@@ -42,6 +45,9 @@ export function Topbar({
   const future = useEditorStore((s) => s.future.length);
   const [exporting, setExporting] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const [showProjects, setShowProjects] = React.useState(false);
+  const projectId = useEditorStore((s) => s.projectId);
+  const lastSavedAt = useEditorStore((s) => s.lastSavedAt);
 
   async function handleExport(format: "html" | "html-zip" | "react") {
     if (!document) return;
@@ -165,6 +171,23 @@ export function Topbar({
           </IconBtn>
         </div>
 
+        {/* Project & save controls */}
+        <button
+          type="button"
+          onClick={() => setShowProjects(true)}
+          className="flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800/50 px-2.5 py-1.5 text-xs text-zinc-300 transition-colors hover:bg-zinc-700"
+        >
+          <FolderOpen size={13} />
+          Projects
+        </button>
+        {projectId && lastSavedAt && (
+          <div className="flex items-center gap-1 text-[10px] text-zinc-600">
+            <Save size={10} />
+            Saved
+          </div>
+        )}
+        <UserMenu />
+
         <div className="relative">
           <button
             type="button"
@@ -200,6 +223,7 @@ export function Topbar({
           ) : null}
         </div>
       </div>
+      {showProjects && <ProjectList onClose={() => setShowProjects(false)} />}
     </header>
   );
 }

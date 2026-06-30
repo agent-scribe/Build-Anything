@@ -7,6 +7,7 @@
  *   - persist (document only) so refreshes don't lose work
  *   - a built-in undo/redo history (no extra dependency)
  *   - a `generate` thunk that streams /api/generate into state
+ *   - server-side autosave for signed-in users (M5)
  */
 "use client";
 
@@ -28,13 +29,6 @@ import type {
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/**
- * Build a polished starting document from the brief, fully client-side, so the
- * live demo never depends on serverless execution. The real Claude engine lives
- * server-side at /api/generate (prompt + plan/validate/repair pipeline); swap
- * this call for that fetch once ANTHROPIC_API_KEY is set on a runtime that
- * executes it reliably.
- */
 function buildSampleFor(brief: GenerationBrief): SiteDocument {
   const doc = structuredClone(SAMPLE_SITE);
   doc.meta.description = brief.prompt.slice(0, 180) || doc.meta.description;
@@ -58,6 +52,33 @@ function buildSampleFor(brief: GenerationBrief): SiteDocument {
   return doc;
 }
 
+/* ------------------------------------------------------------------ */
+/* Autosave debounce                                                   */
+/* ------------------------------------------------------------------ */
+
+let autosaveTimer: ReturnType<typeof setTimeout> | null = null;
+const AUTOSAVE_DELAY = 3000; // 3 seconds after last edit
+
+function scheduleAutosave(projectId: string, doc: SiteDocument) {
+  if (autosaveTimer) clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(async () => {
+    try {
+      await fetch(`/api/projects/${projectId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ document: doc }),
+      });
+      useEditorStore.setState({ lastSavedAt: Date.now() });
+    } catch {
+      // silently fail — server might be unreachable
+    }
+  }, AUTOSAVE_DELAY);
+}
+
+/* ------------------------------------------------------------------ */
+/* Types                                                               */
+/* ------------------------------------------------------------------ */
+
 export type EditorStatus =
   | "idle"
   | "planning"
@@ -71,6 +92,8 @@ interface EditorState {
   document: SiteDocument | null;
   activePageId: string | null;
   selectedSectionId: string | null;
+  projectId: string | null;       // server-side project ID (null = local-only)
+  lastSavedAt: number | null;     // timestamp of last server save
 
   // generation
   status: EditorStatus;
@@ -86,6 +109,8 @@ interface EditorState {
 
   // lifecycle
   setDocument: (doc: SiteDocument) => void;
+  loadDocument: (doc: SiteDocument, mock: boolean) => void;
+  setProjectId: (id: string | null) => void;
   newProject: (name?: string) => void;
   loadSample: () => void;
 
@@ -133,6 +158,11 @@ export const useEditorStore = create<EditorState>()(
           s.future = [];
           if (s.document) recipe(s.document);
         });
+        // Trigger autosave if linked to a server project
+        const state = get();
+        if (state.projectId && state.document) {
+          scheduleAutosave(state.projectId, state.document);
+        }
       };
 
       const findActivePage = (doc: SiteDocument, activePageId: string | null): Page | undefined =>
@@ -147,14 +177,10 @@ export const useEditorStore = create<EditorState>()(
             });
             break;
           case "plan":
-            set((s) => {
-              s.plan = event.order;
-            });
+            set((s) => { s.plan = event.order; });
             break;
           case "delta":
-            set((s) => {
-              s.streamPreview += event.text;
-            });
+            set((s) => { s.streamPreview += event.text; });
             break;
           case "result":
             get().setDocument(event.document);
@@ -178,6 +204,8 @@ export const useEditorStore = create<EditorState>()(
         document: null,
         activePageId: null,
         selectedSectionId: null,
+        projectId: null,
+        lastSavedAt: null,
         status: "idle",
         statusMessage: "",
         streamPreview: "",
@@ -197,13 +225,21 @@ export const useEditorStore = create<EditorState>()(
             s.error = null;
           }),
 
-        newProject: (name) => get().setDocument(createStarterSite(name)),
+        loadDocument: (doc, mock) => {
+          get().setDocument(doc);
+          set((s) => { s.usedMock = mock; });
+        },
+
+        setProjectId: (id) => set((s) => { s.projectId = id; }),
+
+        newProject: (name) => {
+          set((s) => { s.projectId = null; s.lastSavedAt = null; });
+          get().setDocument(createStarterSite(name));
+        },
+
         loadSample: () => get().setDocument(structuredClone(SAMPLE_SITE)),
 
-        selectSection: (id) =>
-          set((s) => {
-            s.selectedSectionId = id;
-          }),
+        selectSection: (id) => set((s) => { s.selectedSectionId = id; }),
 
         setActivePage: (id) =>
           set((s) => {
@@ -249,7 +285,6 @@ export const useEditorStore = create<EditorState>()(
             const section = createSection(type);
             const index = atIndex ?? page.sections.length;
             page.sections.splice(index, 0, section);
-            // select the new section after commit
             queueMicrotask(() => get().selectSection(section.id));
           }),
 
@@ -275,35 +310,39 @@ export const useEditorStore = create<EditorState>()(
           }),
 
         setThemeColor: (key, hex) =>
-          commit((doc) => {
-            doc.theme.colors[key] = hex;
-          }),
+          commit((doc) => { doc.theme.colors[key] = hex; }),
 
         setThemeToken: (patch) =>
-          commit((doc) => {
-            Object.assign(doc.theme, patch);
-          }),
+          commit((doc) => { Object.assign(doc.theme, patch); }),
 
         setFont: (role, family) =>
-          commit((doc) => {
-            doc.theme.fonts[role] = family;
-          }),
+          commit((doc) => { doc.theme.fonts[role] = family; }),
 
-        undo: () =>
+        undo: () => {
           set((s) => {
             const prev = s.past.pop();
             if (!prev || !s.document) return;
             s.future.unshift(structuredClone(s.document));
             s.document = prev;
-          }),
+          });
+          const state = get();
+          if (state.projectId && state.document) {
+            scheduleAutosave(state.projectId, state.document);
+          }
+        },
 
-        redo: () =>
+        redo: () => {
           set((s) => {
             const next = s.future.shift();
             if (!next || !s.document) return;
             s.past.push(structuredClone(s.document));
             s.document = next;
-          }),
+          });
+          const state = get();
+          if (state.projectId && state.document) {
+            scheduleAutosave(state.projectId, state.document);
+          }
+        },
 
         canUndo: () => get().past.length > 0,
         canRedo: () => get().future.length > 0,
@@ -336,7 +375,6 @@ export const useEditorStore = create<EditorState>()(
 
             const { props } = await res.json();
             if (props && typeof props === "object") {
-              // Commit through the normal history-tracked path
               const current = get().document;
               if (!current) return;
               set((s) => {
@@ -347,6 +385,11 @@ export const useEditorStore = create<EditorState>()(
                 const sec = pg?.sections.find((sc) => sc.id === sectionId);
                 if (sec) Object.assign(sec.props as Record<string, unknown>, props);
               });
+              // Autosave after AI edit
+              const afterState = get();
+              if (afterState.projectId && afterState.document) {
+                scheduleAutosave(afterState.projectId, afterState.document);
+              }
             }
             set((s) => { s.status = "idle"; s.statusMessage = ""; });
           } catch (err) {
@@ -400,6 +443,7 @@ export const useEditorStore = create<EditorState>()(
         document: state.document,
         activePageId: state.activePageId,
         selectedSectionId: state.selectedSectionId,
+        projectId: state.projectId,
       }),
     }
   )

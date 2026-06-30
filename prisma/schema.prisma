@@ -1,5 +1,5 @@
-// Prisma schema — projects store the SiteDocument as JSON (the page IS data),
-// with Version snapshots for history and Asset rows for uploaded/generated media.
+// Prisma schema — WeBuild
+// NextAuth adapter models + project/version/asset models.
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,11 +9,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ─── NextAuth models ────────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── App models ─────────────────────────────────────────────────────
+
 model User {
   id        String    @id @default(cuid())
-  email     String    @unique
+  email     String?   @unique
+  emailVerified DateTime?
   name      String?
+  image     String?
   createdAt DateTime  @default(now())
+  accounts  Account[]
+  sessions  Session[]
   projects  Project[]
 }
 
@@ -21,7 +66,7 @@ model Project {
   id        String    @id @default(cuid())
   name      String
   industry  String?
-  /// The current SiteDocument (validated against SiteDocumentSchema before write).
+  /// The current SiteDocument JSON.
   document  Json
   ownerId   String
   owner     User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
@@ -36,7 +81,6 @@ model Project {
 model Version {
   id        String   @id @default(cuid())
   label     String?
-  /// A point-in-time snapshot of the document (manual saves, pre-regeneration, etc).
   document  Json
   projectId String
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
