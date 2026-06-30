@@ -17,6 +17,7 @@ import { persist } from "zustand/middleware";
 import type { GenerationEvent } from "@/lib/ai/pipeline";
 import type { GenerationBrief } from "@/lib/ai/generator-prompt";
 import { createSection, createStarterSite, SAMPLE_SITE } from "@/lib/schema/defaults";
+import { validateSiteDocument } from "@/lib/schema/page-schema";
 import type {
   Page,
   Section,
@@ -24,6 +25,38 @@ import type {
   SiteDocument,
   Theme,
 } from "@/lib/schema/page-schema";
+
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Build a polished starting document from the brief, fully client-side, so the
+ * live demo never depends on serverless execution. The real Claude engine lives
+ * server-side at /api/generate (prompt + plan/validate/repair pipeline); swap
+ * this call for that fetch once ANTHROPIC_API_KEY is set on a runtime that
+ * executes it reliably.
+ */
+function buildSampleFor(brief: GenerationBrief): SiteDocument {
+  const doc = structuredClone(SAMPLE_SITE);
+  doc.meta.description = brief.prompt.slice(0, 180) || doc.meta.description;
+  if (brief.mode === "dark") {
+    doc.theme = {
+      ...doc.theme,
+      mode: "dark",
+      colors: {
+        ...doc.theme.colors,
+        background: "#0A0A0B",
+        foreground: "#FAFAFA",
+        card: "#141418",
+        cardForeground: "#FAFAFA",
+        muted: "#18181B",
+        mutedForeground: "#A1A1AA",
+        border: "#27272A",
+        secondary: "#18181B",
+      },
+    };
+  }
+  return doc;
+}
 
 export type EditorStatus =
   | "idle"
@@ -282,33 +315,24 @@ export const useEditorStore = create<EditorState>()(
             s.streamPreview = "";
             s.plan = null;
           });
-
           try {
-            const res = await fetch("/api/generate", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ...brief, stream: false }),
-            });
-            const data = (await res.json().catch(() => ({}))) as {
-              document?: SiteDocument;
-              usedMock?: boolean;
-              error?: string;
-            };
-            const doc = data.document;
-            if (!res.ok || !doc) {
-              throw new Error(data.error ?? `Request failed (${res.status})`);
-            }
+            await wait(350);
+            const doc = buildSampleFor(brief);
             set((s) => {
               s.plan = doc.pages[0]?.sections.map((sec) => sec.type) ?? null;
               s.status = "validating";
               s.statusMessage = "Validating layout";
             });
-            await new Promise((r) => setTimeout(r, 250));
-            get().setDocument(doc);
+            await wait(400);
+            const result = validateSiteDocument(doc);
+            if (!result.ok) {
+              throw new Error(result.issues[0] ?? "Generated layout was invalid");
+            }
+            get().setDocument(result.data);
             set((s) => {
               s.status = "idle";
               s.statusMessage = "";
-              s.usedMock = Boolean(data.usedMock);
+              s.usedMock = true;
               s.streamPreview = "";
             });
           } catch (err) {
