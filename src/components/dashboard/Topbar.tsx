@@ -46,6 +46,7 @@ export function Topbar({
     if (!document) return;
     setMenuOpen(false);
     setExporting(true);
+    import("@/lib/analytics").then((m) => m.analytics.exportSite(format));
     try {
       const res = await fetch("/api/export", {
         method: "POST",

@@ -1,73 +1,114 @@
-# WeBuild
+# WeBuild — AI Website & Store Generator
 
-Prompt-to-store AI builder. Describe a business → get a beautiful, editable,
-high-converting site → customize it visually → export clean code.
+**Live demo:** [webuild-studio.netlify.app](https://webuild-studio.netlify.app)
 
-This repo is **Phase 1: the core architecture and engine**. It runs end-to-end
-today: generate (real or demo), edit on a live canvas, theme it, and export.
+Describe any business in plain English and get a beautiful, editable, high-converting website or online store in seconds. Customize visually, then export clean React or HTML code.
 
-## Quickstart
+---
+
+## What's Included
+
+- **AI-Powered Generation** — Claude AI turns a prompt into a complete multi-page site
+- **2,001 Starter Templates** — 801 e-commerce + 1,200 website templates across 19 categories
+- **Visual Editor** — Drag-and-drop sections, inline text editing, AI-assisted edits
+- **22 Section Types** — Hero, features, pricing, testimonials, gallery, team, blog, contact, timeline, video, and 12 more
+- **E-Commerce Built In** — Product catalogs, cart drawer, checkout flow, order confirmation
+- **Multi-Page Sites** — Generate and manage multiple pages with shared navigation
+- **Export** — Clean HTML or React component bundle
+- **3-Tier Pricing** — Free / Pro ($29/mo) / Studio ($99/mo) subscription pages
+- **Collaboration Foundation** — Presence awareness, share links, cursor tracking
+- **Google Analytics** — Event tracking for generation, template picks, exports
+- **SEO Optimized** — Sitemap, robots.txt, OpenGraph meta, semantic HTML
+- **Marketing Site** — Landing page, features page, public template gallery, pricing page
+- **Responsive** — Works on desktop, tablet, and mobile
+- **Dark Mode UI** — Professional editor interface (Linear/Vercel aesthetic)
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router) |
+| UI | React 19 + Tailwind CSS 3.4 |
+| State | Zustand + Immer (undo/redo) |
+| AI | Anthropic Claude SDK |
+| Schema | Zod (single source of truth) |
+| Icons | Lucide React |
+| Analytics | Google Analytics 4 |
+| Deploy | Netlify (auto-deploy from main) |
+
+## Quick Start
 
 ```bash
+git clone https://github.com/agent-scribe/Build-Anything.git
+cd Build-Anything
 npm install
-cp .env.example .env.local      # optional: add ANTHROPIC_API_KEY for live generation
-npm run dev                     # → http://localhost:3000/dashboard
+npm run dev
 ```
 
-No API key? The dashboard runs a built-in **demo generator** (returns a complete
-sample store) so the entire UI is explorable offline. Add `ANTHROPIC_API_KEY` to
-switch to real Claude generation automatically.
+Works immediately in demo mode — no API keys required. See [SETUP.md](./SETUP.md) for production configuration.
 
-## How it works (the one idea)
+## How It Works
 
-**The page is data, not code.** The model never writes JSX — it emits a strictly
-typed JSON `SiteDocument`. A deterministic renderer turns that document into UI;
-the editor mutates the document; export serializes it. This is what makes
-generation reliable, editing trivial, and export clean.
+**The page is data, not code.** The AI emits a typed JSON `SiteDocument` (validated by Zod). A deterministic renderer draws it. The editor mutates the document. Export serializes it. This architecture makes generation reliable, editing trivial, and export clean.
 
 ```
 prompt → [plan → generate → validate → repair] → SiteDocument → renderer → canvas
-                         (Claude)        (Zod)                    (your code)
+                         (Claude AI)     (Zod)                    (React)
 ```
 
-## Phase 1 deliverable map
+## MVP Status
 
-| Deliverable | Where |
-|---|---|
-| Tech stack & architecture | `ARCHITECTURE.md` |
-| JSON layout schema (source of truth) | `src/lib/schema/page-schema.ts` |
-| Model-facing contract | `src/lib/schema/json-schema.ts` |
-| Core generator system prompt | `src/lib/ai/generator-prompt.ts` |
-| Generation engine (plan→validate→repair) | `src/lib/ai/pipeline.ts`, `client.ts` |
-| Streaming API | `src/app/api/generate/route.ts` |
-| Export engine (HTML + React) | `src/app/api/export/route.ts`, `src/lib/export/*` |
-| Editor state (Zustand + undo) | `src/lib/store/useEditorStore.ts` |
-| Cart state | `src/lib/ecommerce/cart.ts` |
-| Section library + renderer | `src/components/sections/*`, `src/components/renderer/*` |
-| **Dashboard workspace** | `src/components/dashboard/*` |
+This is a fully functional MVP with mock implementations for rapid demo:
+
+| Feature | MVP (Current) | Production (Buyer Adds) |
+|---|---|---|
+| Auth | localStorage mock | NextAuth + Google/GitHub OAuth |
+| Database | localStorage | PostgreSQL via Prisma (Supabase free tier) |
+| Payments | Simulated checkout | Stripe / Paddle / LemonSqueezy |
+| Collaboration | Local simulation | Liveblocks / PartyKit (free tiers) |
+| AI | Demo fallback + real Claude | Anthropic API key |
+| Images | Placeholder URLs | Unsplash API (free) |
+
+All integration points are clearly documented in [SETUP.md](./SETUP.md). Every mock can be swapped independently — the architecture is modular.
+
+## Revenue Potential
+
+| Scenario | MRR | Annual |
+|---|---|---|
+| 50 Pro ($29) + 10 Studio ($99) | $2,440 | $29,280 |
+| 100 Pro + 25 Studio | $5,375 | $64,500 |
+| 200 Pro + 50 Studio | $10,750 | $129,000 |
+
+Infrastructure cost at scale: <$50/month (AI generation is pay-per-use at ~$0.03/generation).
+
+## File Structure
+
+```
+src/
+├── app/                    # Pages (landing, features, templates, pricing, dashboard)
+├── components/
+│   ├── dashboard/          # Editor UI (Topbar, Sidebar, Inspector, Canvas, Collab)
+│   └── sections/           # 22 renderable section types
+├── lib/
+│   ├── ai/                 # Claude AI pipeline
+│   ├── collab/             # Collaboration system
+│   ├── templates/          # 2,001 template catalog (combinator pattern)
+│   ├── schema/             # Zod page schema
+│   ├── store/              # Zustand editor store
+│   ├── mock-auth/          # → swap for NextAuth
+│   ├── mock-db/            # → swap for Prisma
+│   └── mock-stripe/        # → swap for Stripe
+```
 
 ## Scripts
 
 ```bash
-npm run dev         # start the dashboard
+npm run dev         # development server
 npm run build       # production build
-npm run typecheck   # tsc --noEmit
-npm run lint        # next lint
-npm run db:push     # push prisma schema (needs DATABASE_URL)
+npm run typecheck   # TypeScript check
+npm run lint        # ESLint
 ```
 
-## Notes
+## License
 
-- **Tailwind**: pinned to v3.4 for a clean first-run. The app chrome uses core
-  utilities; generated sites are themed entirely via CSS variables, so migrating
-  to v4 later touches nothing in the renderer.
-- **Persistence**: the Prisma schema models `Project · Version · Asset` with the
-  document stored as JSON. Wiring it to the store is Phase 1.5 (auth + autosave).
-- **Demo vs live**: `hasAnthropicKey()` decides automatically — no flags.
-
-## What's next (Phase 2)
-
-Multi-page generation, drag-and-drop section reordering, AI re-theme ("make it
-warmer"), per-item content editing (products, plans, testimonials), real image
-generation/Unsplash resolution, auth + autosave, and one-click Vercel deploy of
-exported sites.
+Proprietary — all rights transfer to buyer upon purchase.

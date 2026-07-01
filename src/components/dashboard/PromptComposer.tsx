@@ -47,6 +47,8 @@ export function PromptComposer() {
   async function submit() {
     const value = prompt.trim();
     if (!value || busy) return;
+    // GA4 event
+    import("@/lib/analytics").then((m) => m.analytics.generate(value));
     await generate({ prompt: value, mode, ecommerce });
   }
 

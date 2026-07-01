@@ -57,6 +57,7 @@ export function TemplatePicker({ onClose }: { onClose: () => void }) {
       const template = getTemplate(meta.id);
       if (template) {
         loadDocument(template.document, false);
+        import("@/lib/analytics").then((m) => m.analytics.templatePick(meta.id));
       }
       setLoading(null);
       onClose();
