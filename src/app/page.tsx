@@ -137,6 +137,7 @@ export default function LandingPage() {
           <div className="hidden items-center gap-6 text-sm text-zinc-400 md:flex">
             <a href="#features" className="transition-colors hover:text-zinc-100">Features</a>
             <a href="#templates" className="transition-colors hover:text-zinc-100">Templates</a>
+            <Link href="/prompt-studio" className="transition-colors hover:text-zinc-100">Prompt Studio</Link>
             <a href="#pricing" className="transition-colors hover:text-zinc-100">Pricing</a>
           </div>
           <div className="flex items-center gap-3">
@@ -377,6 +378,37 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Prompt Studio CTA */}
+      <section className="mx-auto max-w-5xl px-4 py-20">
+        <div className="rounded-2xl border border-[#6d5efc]/20 bg-gradient-to-br from-[#6d5efc]/5 to-transparent p-8 md:p-12 flex flex-col md:flex-row items-center gap-8">
+          <div className="flex-1">
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#6d5efc]/10 px-3 py-1 text-xs text-[#a99bff] mb-4">
+              <Sparkles size={12} />
+              NEW
+            </div>
+            <h2 className="text-2xl font-bold md:text-3xl">Prompt Studio</h2>
+            <p className="mt-3 text-zinc-400 max-w-lg">
+              Our AI Prompt Engineering Platform. Enter a rough idea, get a quality score,
+              answer intelligent follow-up questions, and generate multiple optimized prompt
+              versions. 8 rewrite modes, iterative refinement, multi-format export, and token cost calculator.
+            </p>
+            <Link
+              href="/prompt-studio"
+              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#6d5efc] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            >
+              Try Prompt Studio
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+          <div className="shrink-0 w-64 h-48 rounded-xl border border-zinc-800 bg-[#141418] flex items-center justify-center">
+            <div className="text-center">
+              <Wand2 size={32} className="mx-auto text-[#6d5efc] mb-2" />
+              <p className="text-xs text-zinc-500">AI-Powered Prompt<br />Engineering Platform</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Final CTA */}
       <section className="mx-auto max-w-3xl px-4 py-24 text-center">
         <h2 className="text-3xl font-bold md:text-4xl">
@@ -406,7 +438,9 @@ export default function LandingPage() {
           <div className="flex gap-6 text-sm text-zinc-500">
             <Link href="/pricing" className="hover:text-zinc-300">Pricing</Link>
             <Link href="/dashboard" className="hover:text-zinc-300">Dashboard</Link>
-            <a href="#features" className="hover:text-zinc-300">Features</a>
+            <Link href="/prompt-studio" className="hover:text-zinc-300">Prompt Studio</Link>
+            <Link href="/privacy" className="hover:text-zinc-300">Privacy</Link>
+            <Link href="/terms" className="hover:text-zinc-300">Terms</Link>
           </div>
         </div>
       </footer>
