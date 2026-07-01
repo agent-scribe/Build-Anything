@@ -5,6 +5,7 @@ import { AlertCircle, ArrowUp, LayoutGrid, Loader2, Moon, ShoppingBag, Sparkles,
 import { cn } from "@/lib/utils/cn";
 import { useEditorStore } from "@/lib/store/useEditorStore";
 import { TemplatePicker } from "./TemplatePicker";
+import { getTemplateCount } from "@/lib/templates";
 
 const EXAMPLES = [
   "A premium minimalist skincare store with a sage-green palette",
@@ -114,7 +115,7 @@ export function PromptComposer() {
               className="flex items-center gap-1.5 rounded-full border border-[#6d5efc]/30 bg-[#6d5efc]/10 px-3 py-1 text-xs font-medium text-[#a99bff] transition-colors hover:border-[#6d5efc]/50 hover:bg-[#6d5efc]/20"
             >
               <LayoutGrid size={12} />
-              Browse 2,001 Templates
+              Browse {getTemplateCount().toLocaleString()} Templates
             </button>
             {EXAMPLES.map((ex) => (
               <button

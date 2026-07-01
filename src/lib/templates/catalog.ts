@@ -38,7 +38,8 @@ function L(label: string, href: string, variant: "primary"|"secondary"|"ghost"|"
 
 function heroSec(headline: string, sub: string, isEcom: boolean): SectionConfig {
   return { type: "hero", props: { headline, subheadline: sub,
-    ctas: [L(isEcom ? "Shop Now" : "Get Started", isEcom ? "#products" : "#features", "primary"), L("Learn More", "#about", "secondary")]
+    primaryCta: L(isEcom ? "Shop Now" : "Get Started", isEcom ? "#products" : "#features", "primary"),
+    secondaryCta: L("Learn More", "#about", "secondary"),
   }};
 }
 
@@ -70,17 +71,17 @@ function faqSec(name: string, isEcom: boolean): SectionConfig {
 }
 
 function ctaSec(sub: string, isEcom: boolean): SectionConfig {
-  return { type: "cta", props: { headline: isEcom ? "Start shopping today" : "Ready to get started?", description: sub,
-    ctas: [L(isEcom ? "Shop Now" : "Get Started Free", "#", "primary")]
+  return { type: "cta", props: { headline: isEcom ? "Start shopping today" : "Ready to get started?", subheadline: sub,
+    primaryCta: L(isEcom ? "Shop Now" : "Get Started Free", "#", "primary"),
   }};
 }
 
 function newsletterSec(name: string): SectionConfig {
-  return { type: "newsletter", props: { title: "Stay in the loop", subtitle: `Latest from ${name}. No spam.`, buttonLabel: "Subscribe", placeholder: "Enter your email" }};
+  return { type: "newsletter", props: { headline: "Stay in the loop", subheadline: `Latest from ${name}. No spam.`, buttonLabel: "Subscribe", placeholder: "Enter your email" }};
 }
 
 function logosSec(): SectionConfig {
-  return { type: "logos", props: { title: "Trusted by leading brands", grayscale: true, items: [
+  return { type: "logos", props: { title: "Trusted by leading brands", logos: [
     { name: "Brand 1", image: { src: "https://images.unsplash.com/photo-placeholder?w=120&h=40&b1", alt: "Brand" }},
     { name: "Brand 2", image: { src: "https://images.unsplash.com/photo-placeholder?w=120&h=40&b2", alt: "Brand" }},
     { name: "Brand 3", image: { src: "https://images.unsplash.com/photo-placeholder?w=120&h=40&b3", alt: "Brand" }},
@@ -96,15 +97,16 @@ function metricsSec(isEcom: boolean): SectionConfig {
 }
 
 function pricingSec(): SectionConfig {
-  return { type: "pricing", variant: "cards", props: { title: "Simple Pricing", subtitle: "Choose your plan", columns: 3, items: [
-    { name: "Starter", price: 0, period: "month", description: "For individuals", features: ["Up to 3 projects","Basic support","1GB storage"], cta: L("Get Started","#","secondary") },
-    { name: "Pro", price: 29, period: "month", description: "For professionals", features: ["Unlimited projects","Priority support","50GB storage","Advanced analytics"], badge: "Popular", cta: L("Start Trial","#","primary") },
-    { name: "Enterprise", price: 99, period: "month", description: "For teams", features: ["Everything in Pro","SSO","Unlimited storage","Dedicated support"], cta: L("Contact Sales","#","secondary") },
+  return { type: "pricing", variant: "cards", props: { title: "Simple Pricing", subtitle: "Choose your plan", columns: 3, plans: [
+    { name: "Starter", price: "Free", period: "month", description: "For individuals", features: ["Up to 3 projects","Basic support","1GB storage"], highlighted: false, cta: L("Get Started","#","secondary") },
+    { name: "Pro", price: "$29", period: "month", description: "For professionals", features: ["Unlimited projects","Priority support","50GB storage","Advanced analytics"], badge: "Popular", highlighted: true, cta: L("Start Trial","#","primary") },
+    { name: "Enterprise", price: "$99", period: "month", description: "For teams", features: ["Everything in Pro","SSO","Unlimited storage","Dedicated support"], highlighted: false, cta: L("Contact Sales","#","secondary") },
   ]}};
 }
 
 function comparisonSec(name: string): SectionConfig {
-  return { type: "comparison", variant: "table", props: { title: `Why ${name}`, subtitle: "See how we compare", plans: [name, "Competitor A", "Competitor B"],
+  return { type: "comparison", variant: "table", props: { title: `Why ${name}`, subtitle: "See how we compare",
+    plans: [{ name, highlighted: true }, { name: "Competitor A", highlighted: false }, { name: "Competitor B", highlighted: false }],
     features: [{ name: "Quality guarantee", values: [true, false, true] }, { name: "Free shipping", values: [true, true, false] }, { name: "24/7 support", values: [true, false, false] }, { name: "Money-back", values: [true, true, true] }]
   }};
 }
@@ -124,15 +126,15 @@ function gallerySec(kw: string): SectionConfig {
 }
 
 function portfolioSec(): SectionConfig {
-  return { type: "portfolio", variant: "grid", props: { title: "Our Work", subtitle: "Selected projects", columns: 3, items: [
-    { title: "Project Alpha", description: "A flagship project", image: { src: "https://images.unsplash.com/photo-placeholder?w=600&h=400&p1", alt: "Project" }, tags: ["Featured"] },
-    { title: "Project Beta", description: "Innovation in action", image: { src: "https://images.unsplash.com/photo-placeholder?w=600&h=400&p2", alt: "Project" }, tags: ["Latest"] },
-    { title: "Project Gamma", description: "Award-winning work", image: { src: "https://images.unsplash.com/photo-placeholder?w=600&h=400&p3", alt: "Project" }, tags: ["Award"] },
+  return { type: "portfolio", variant: "grid", props: { title: "Our Work", subtitle: "Selected projects", columns: 3, projects: [
+    { title: "Project Alpha", description: "A flagship project", image: { src: "https://images.unsplash.com/photo-placeholder?w=600&h=400&p1", alt: "Project" }, category: "Featured", href: "#" },
+    { title: "Project Beta", description: "Innovation in action", image: { src: "https://images.unsplash.com/photo-placeholder?w=600&h=400&p2", alt: "Project" }, category: "Latest", href: "#" },
+    { title: "Project Gamma", description: "Award-winning work", image: { src: "https://images.unsplash.com/photo-placeholder?w=600&h=400&p3", alt: "Project" }, category: "Award", href: "#" },
   ]}};
 }
 
 function contactSec(): SectionConfig {
-  return { type: "contact", variant: "split", props: { title: "Get in Touch", subtitle: "We would love to hear from you", email: "hello@example.com", phone: "+1 (555) 123-4567", address: "123 Main St, City, ST 12345", submitLabel: "Send Message" }};
+  return { type: "contact", variant: "split", props: { title: "Get in Touch", subtitle: "We would love to hear from you", email: "hello@example.com", phone: "+1 (555) 123-4567", address: "123 Main St, City, ST 12345", formFields: ["name", "email", "message"], submitLabel: "Send Message" }};
 }
 
 function timelineSec(name: string): SectionConfig {
@@ -154,10 +156,10 @@ function bannerSec(name: string, isEcom: boolean): SectionConfig {
 }
 
 function blogSec(name: string): SectionConfig {
-  return { type: "blog", variant: "grid", props: { title: "Latest Articles", subtitle: `Insights from ${name}`, columns: 3, items: [
-    { title: "Getting Started Guide", excerpt: "Everything to get started.", date: "2026-06-15", author: "Team" },
-    { title: "Tips and Best Practices", excerpt: "Expert tips for maximum value.", date: "2026-06-01", author: "Team" },
-    { title: "2026 Industry Trends", excerpt: "What to watch this year.", date: "2026-05-15", author: "Team" },
+  return { type: "blog", variant: "grid", props: { title: "Latest Articles", subtitle: `Insights from ${name}`, columns: 3, posts: [
+    { title: "Getting Started Guide", excerpt: "Everything to get started.", date: "2026-06-15", author: "Team", href: "#" },
+    { title: "Tips and Best Practices", excerpt: "Expert tips for maximum value.", date: "2026-06-01", author: "Team", href: "#" },
+    { title: "2026 Industry Trends", excerpt: "What to watch this year.", date: "2026-05-15", author: "Team", href: "#" },
   ]}};
 }
 

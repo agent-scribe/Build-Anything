@@ -443,6 +443,16 @@ export const useEditorStore = create<EditorState>()(
         selectedSectionId: state.selectedSectionId,
         projectId: state.projectId,
       }),
+      // A previously-persisted document may predate a schema fix (or come from
+      // a buggy build). Validate on rehydrate so a malformed cached document
+      // can't permanently crash the editor for a returning visitor.
+      onRehydrateStorage: () => (state) => {
+        if (state?.document && !validateSiteDocument(state.document).ok) {
+          state.document = null;
+          state.activePageId = null;
+          state.selectedSectionId = null;
+        }
+      },
     }
   )
 );

@@ -92,13 +92,17 @@ function ecomNav(siteName: string): Link[] {
 /* ------------------------------------------------------------------ */
 
 function buildProduct(cfg: ProductConfig, idx: number) {
+  const image = unsplash(cfg.image);
   return {
     id: uid(),
     name: cfg.name,
     description: cfg.description,
     price: cfg.price,
     compareAtPrice: idx === 0 ? Math.round(cfg.price * 1.3) : undefined,
-    image: unsplash(cfg.image),
+    currency: "USD",
+    image,
+    images: [image],
+    tags: [] as string[],
     badge: idx === 0 ? "Best Seller" : undefined,
   };
 }
@@ -141,7 +145,7 @@ export function buildTemplate(cfg: TemplateConfig): SiteDocument {
     paddingY: "none",
     background: "default",
     props: {
-      brand: siteName,
+      logo: siteName,
       links: navLinks,
       sticky: true,
     },
@@ -165,7 +169,7 @@ export function buildTemplate(cfg: TemplateConfig): SiteDocument {
           title: "Our Products",
           subtitle: "Handpicked for you",
           columns: Math.min(products.length, 3) as 2 | 3 | 4,
-          items: products.map(buildProduct),
+          productIds: [],
         },
       } as unknown as Section,
     ];
@@ -179,12 +183,15 @@ export function buildTemplate(cfg: TemplateConfig): SiteDocument {
     paddingY: "lg",
     background: "default",
     props: {
-      brand: siteName,
+      logo: siteName,
       tagline: cfg.tagline,
       copyright: cfg.footerCopy || `${new Date().getFullYear()} ${siteName}. All rights reserved.`,
-      links: [
-        { label: "Privacy", href: "/privacy", variant: "link" as const, external: false },
-        { label: "Terms", href: "/terms", variant: "link" as const, external: false },
+      socials: [],
+      columns: [
+        { heading: "Company", links: [
+          { label: "Privacy", href: "/privacy", variant: "link" as const, external: false },
+          { label: "Terms", href: "/terms", variant: "link" as const, external: false },
+        ] },
       ],
     },
   } as unknown as Section;
@@ -209,23 +216,22 @@ export function buildTemplate(cfg: TemplateConfig): SiteDocument {
   allSections.push(footer);
 
   return {
-    siteName,
-    slug: cfg.id,
+    version: "1.0",
+    meta: {
+      name: siteName,
+      description: cfg.tagline,
+      industry: undefined,
+      designNotes: undefined,
+    },
     theme,
+    products: products?.length ? products.map(buildProduct) : [],
     pages: [
       {
         id: "home",
-        title: "Home",
-        slug: "/",
+        name: "Home",
+        path: "/",
         sections: allSections,
       },
     ],
-    ecommerce: products?.length
-      ? {
-          enabled: true,
-          currency: "USD",
-          products: products.map(buildProduct),
-        }
-      : undefined,
   } as SiteDocument;
 }
