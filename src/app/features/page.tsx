@@ -20,7 +20,7 @@ import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 export const metadata: Metadata = {
   title: "Features",
   description:
-    "AI generation, a visual editor, 22 section types, 2,001 templates, built-in e-commerce, and clean code export — everything you need to ship a high-converting site.",
+    "AI generation, a visual editor, 22 section types, 7,000+ templates, built-in e-commerce, and clean code export — everything you need to ship a high-converting site.",
 };
 
 const AUDIENCES = [
@@ -76,14 +76,14 @@ const SECTIONS = [
     ],
   },
   {
-    title: "2,001 Starter Templates",
+    title: "7,000+ Starter Templates",
     outcome: "Never start from a blank page.",
     description:
       "Browse a curated library across 19 categories — e-commerce, SaaS, restaurants, portfolios, health, legal, finance, and more. One click to load.",
     icon: LayoutGrid,
     items: [
-      "501 e-commerce store templates",
-      "500+ website templates",
+      "2,801 e-commerce store templates",
+      "4,200 website templates",
       "19 industry categories",
       "11 visual style presets",
       "Search and filter by category",
