@@ -572,8 +572,9 @@ const ITEM_FIELD_MAP: Partial<Record<SectionType, { arrayKey: string; fields: { 
 };
 
 function ItemEditor({ sectionId, sectionType, props, updateProps }: ItemEditorProps) {
-  const config = ITEM_FIELD_MAP[sectionType];
-  if (!config) return null;
+  const configMaybe = ITEM_FIELD_MAP[sectionType];
+  if (!configMaybe) return null;
+  const config = configMaybe;
 
   const items = (props[config.arrayKey] as ItemShape[]) ?? [];
   const [expandedIndex, setExpandedIndex] = React.useState<number | null>(null);
