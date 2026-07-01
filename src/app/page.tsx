@@ -11,17 +11,29 @@ import {
   LayoutGrid,
   Monitor,
   Palette,
+  Plus,
+  Minus,
   ShoppingBag,
   Sparkles,
   Star,
   Wand2,
-  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { MarketingNav } from "@/components/marketing/MarketingNav";
+import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 
 /* ------------------------------------------------------------------ */
 /* Data                                                                */
 /* ------------------------------------------------------------------ */
+
+const METRICS = [
+  { value: "2,001", label: "Starter templates" },
+  { value: "22", label: "Section types" },
+  { value: "< 60s", label: "Idea to live site" },
+  { value: "19", label: "Industries covered" },
+];
+
+const LOGOS = ["Northwind", "Lumen", "Faraday", "Kettle & Co.", "Vertex", "Bloom"];
 
 const FEATURES = [
   {
@@ -70,10 +82,10 @@ const STEPS = [
 ];
 
 const TESTIMONIALS = [
-  { quote: "I built my entire Shopify replacement in 20 minutes. The AI nailed my brand voice.", author: "Sarah K.", role: "E-commerce Founder" },
-  { quote: "We used to spend $5K on landing pages. WeBuild does it in one prompt.", author: "Marcus T.", role: "Marketing Director" },
-  { quote: "The template library is insane. 2,001 starting points and I always find something close.", author: "Priya R.", role: "Freelance Designer" },
-  { quote: "Export as Next.js is a game changer. I get a real codebase, not some locked-in builder.", author: "Jake L.", role: "Full-Stack Developer" },
+  { quote: "I built my entire Shopify replacement in 20 minutes. The AI nailed my brand voice.", author: "Sarah K.", role: "E-commerce Founder", result: "Launched in 1 day" },
+  { quote: "We used to spend $5K on landing pages. WeBuild does it in one prompt.", author: "Marcus T.", role: "Marketing Director", result: "Saved $5K / page" },
+  { quote: "The template library is insane. 2,001 starting points and I always find something close.", author: "Priya R.", role: "Freelance Designer", result: "3× faster delivery" },
+  { quote: "Export as Next.js is a game changer. I get a real codebase, not some locked-in builder.", author: "Jake L.", role: "Full-Stack Developer", result: "Zero lock-in" },
 ];
 
 const TIERS = [
@@ -120,6 +132,25 @@ const CATEGORIES = [
   "Nonprofit", "Sports", "Entertainment", "Construction", "Agriculture", "Pets", "Services",
 ];
 
+const FAQS = [
+  {
+    q: "Do I need to know how to code?",
+    a: "No. Describe what you want in plain English and WeBuild generates the whole site. Edit visually with drag-and-drop. Code export is there if you want it — never required.",
+  },
+  {
+    q: "Can I export my site and host it anywhere?",
+    a: "Yes. Export clean HTML, a full Next.js project, or a ZIP. No proprietary lock-in — deploy to Vercel, Netlify, or your own server.",
+  },
+  {
+    q: "Is there a free plan?",
+    a: "Yes. The Free plan includes 3 projects and 5 AI generations a month, with HTML export. No credit card required to start.",
+  },
+  {
+    q: "Can I sell products with WeBuild?",
+    a: "Yes. E-commerce is built in — product catalogs, cart, and checkout. Connect your Stripe keys to take real payments.",
+  },
+];
+
 /* ------------------------------------------------------------------ */
 /* Page                                                                */
 /* ------------------------------------------------------------------ */
@@ -127,38 +158,10 @@ const CATEGORIES = [
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 antialiased">
-      {/* Nav */}
-      <nav className="fixed inset-x-0 top-0 z-50 border-b border-zinc-800/60 bg-[#09090b]/80 backdrop-blur-lg">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-            <Sparkles size={20} className="text-[#6d5efc]" />
-            WeBuild
-          </Link>
-          <div className="hidden items-center gap-6 text-sm text-zinc-400 md:flex">
-            <a href="#features" className="transition-colors hover:text-zinc-100">Features</a>
-            <a href="#templates" className="transition-colors hover:text-zinc-100">Templates</a>
-            <Link href="/prompt-studio" className="transition-colors hover:text-zinc-100">Prompt Studio</Link>
-            <a href="#pricing" className="transition-colors hover:text-zinc-100">Pricing</a>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/auth/signin"
-              className="text-sm text-zinc-400 transition-colors hover:text-zinc-100"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/dashboard"
-              className="rounded-lg bg-[#6d5efc] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
-            >
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <MarketingNav />
 
       {/* Hero */}
-      <section className="relative overflow-hidden pt-32 pb-20">
+      <section className="relative overflow-hidden pt-32 pb-16">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute left-1/2 top-0 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-[#6d5efc]/10 blur-[120px]" />
         </div>
@@ -168,34 +171,61 @@ export default function LandingPage() {
             <Sparkles size={14} />
             2,001 templates &middot; 22 section types &middot; AI generation
           </div>
-          <h1 className="text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
-            Prompt to website
+          <h1 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+            Launch a high-converting
             <br />
+            website{" "}
             <span className="bg-gradient-to-r from-[#6d5efc] to-[#a99bff] bg-clip-text text-transparent">
-              in seconds
+              from one prompt
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-zinc-400 md:text-xl">
-            Describe your business. AI generates a beautiful, editable, production-ready website or store.
-            Customize visually. Export clean code. Launch.
+            WeBuild turns a plain-English description into a beautiful, editable, production-ready
+            website or online store — for founders, agencies, and freelancers who need to ship fast.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               href="/dashboard"
-              className="flex items-center gap-2 rounded-xl bg-[#6d5efc] px-6 py-3 text-base font-semibold text-white shadow-lg shadow-[#6d5efc]/25 transition-opacity hover:opacity-90"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#6d5efc] px-6 py-3 text-base font-semibold text-white shadow-lg shadow-[#6d5efc]/25 transition-opacity hover:opacity-90 sm:w-auto"
             >
               Start Building Free
               <ArrowRight size={18} />
             </Link>
             <a
               href="#demo"
-              className="flex items-center gap-2 rounded-xl border border-zinc-700 px-6 py-3 text-base font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700 px-6 py-3 text-base font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white sm:w-auto"
             >
               <Globe size={18} />
               See Live Demo
             </a>
           </div>
           <p className="mt-4 text-xs text-zinc-600">No credit card required. Free forever plan available.</p>
+        </div>
+
+        {/* Metrics band */}
+        <div className="relative mx-auto mt-14 max-w-4xl px-4">
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-800 md:grid-cols-4">
+            {METRICS.map((m) => (
+              <div key={m.label} className="bg-[#0e0e11] px-4 py-6 text-center">
+                <div className="text-2xl font-bold text-zinc-100 md:text-3xl">{m.value}</div>
+                <div className="mt-1 text-xs text-zinc-500">{m.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Logos / social proof */}
+      <section className="mx-auto max-w-5xl px-4 pb-16">
+        <p className="text-center text-xs uppercase tracking-widest text-zinc-600">
+          Trusted by builders shipping for teams like
+        </p>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+          {LOGOS.map((name) => (
+            <span key={name} className="text-lg font-semibold text-zinc-600 transition-colors hover:text-zinc-400">
+              {name}
+            </span>
+          ))}
         </div>
       </section>
 
@@ -263,6 +293,12 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
+        <div className="mt-10 text-center">
+          <Link href="/features" className="inline-flex items-center gap-1.5 text-sm font-medium text-[#a99bff] hover:text-white">
+            Explore all features
+            <ArrowRight size={15} />
+          </Link>
+        </div>
       </section>
 
       {/* Templates */}
@@ -286,7 +322,7 @@ export default function LandingPage() {
           </div>
           <div className="text-center">
             <Link
-              href="/dashboard"
+              href="/templates"
               className="inline-flex items-center gap-2 rounded-xl bg-[#6d5efc] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             >
               Browse All Templates
@@ -305,17 +341,22 @@ export default function LandingPage() {
           {TESTIMONIALS.map((t, i) => (
             <div
               key={i}
-              className="rounded-2xl border border-zinc-800 bg-[#141418] p-6"
+              className="flex flex-col rounded-2xl border border-zinc-800 bg-[#141418] p-6"
             >
               <div className="mb-3 flex gap-0.5">
                 {Array.from({ length: 5 }).map((_, j) => (
                   <Star key={j} size={14} className="fill-amber-400 text-amber-400" />
                 ))}
               </div>
-              <p className="mb-4 text-sm text-zinc-300 italic">&ldquo;{t.quote}&rdquo;</p>
-              <div className="text-sm">
-                <span className="font-medium text-zinc-100">{t.author}</span>
-                <span className="text-zinc-500"> &mdash; {t.role}</span>
+              <p className="mb-4 flex-1 text-sm italic text-zinc-300">&ldquo;{t.quote}&rdquo;</p>
+              <div className="flex items-center justify-between border-t border-zinc-800/60 pt-4 text-sm">
+                <span>
+                  <span className="font-medium text-zinc-100">{t.author}</span>
+                  <span className="text-zinc-500"> &mdash; {t.role}</span>
+                </span>
+                <span className="rounded-full bg-[#6d5efc]/10 px-2.5 py-1 text-xs font-medium text-[#a99bff]">
+                  {t.result}
+                </span>
               </div>
             </div>
           ))}
@@ -362,7 +403,7 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <Link
-                  href="/dashboard"
+                  href="/pricing"
                   className={cn(
                     "mt-6 block w-full rounded-xl py-2.5 text-center text-sm font-semibold transition-opacity",
                     tier.highlighted
@@ -375,19 +416,25 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+          <div className="mt-8 text-center">
+            <Link href="/pricing" className="inline-flex items-center gap-1.5 text-sm font-medium text-[#a99bff] hover:text-white">
+              Compare plans in detail
+              <ArrowRight size={15} />
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Prompt Studio CTA */}
       <section className="mx-auto max-w-5xl px-4 py-20">
-        <div className="rounded-2xl border border-[#6d5efc]/20 bg-gradient-to-br from-[#6d5efc]/5 to-transparent p-8 md:p-12 flex flex-col md:flex-row items-center gap-8">
+        <div className="flex flex-col items-center gap-8 rounded-2xl border border-[#6d5efc]/20 bg-gradient-to-br from-[#6d5efc]/5 to-transparent p-8 md:flex-row md:p-12">
           <div className="flex-1">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#6d5efc]/10 px-3 py-1 text-xs text-[#a99bff] mb-4">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#6d5efc]/10 px-3 py-1 text-xs text-[#a99bff]">
               <Sparkles size={12} />
               NEW
             </div>
             <h2 className="text-2xl font-bold md:text-3xl">Prompt Studio</h2>
-            <p className="mt-3 text-zinc-400 max-w-lg">
+            <p className="mt-3 max-w-lg text-zinc-400">
               Our AI Prompt Engineering Platform. Enter a rough idea, get a quality score,
               answer intelligent follow-up questions, and generate multiple optimized prompt
               versions. 8 rewrite modes, iterative refinement, multi-format export, and token cost calculator.
@@ -400,12 +447,31 @@ export default function LandingPage() {
               <ArrowRight size={16} />
             </Link>
           </div>
-          <div className="shrink-0 w-64 h-48 rounded-xl border border-zinc-800 bg-[#141418] flex items-center justify-center">
+          <div className="flex h-48 w-64 shrink-0 items-center justify-center rounded-xl border border-zinc-800 bg-[#141418]">
             <div className="text-center">
-              <Wand2 size={32} className="mx-auto text-[#6d5efc] mb-2" />
+              <Wand2 size={32} className="mx-auto mb-2 text-[#6d5efc]" />
               <p className="text-xs text-zinc-500">AI-Powered Prompt<br />Engineering Platform</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* FAQ preview */}
+      <section className="mx-auto max-w-3xl px-4 py-20">
+        <h2 className="mb-4 text-center text-3xl font-bold md:text-4xl">Common questions</h2>
+        <p className="mx-auto mb-10 max-w-xl text-center text-zinc-400">
+          Everything you need to know before you start. More on the full FAQ.
+        </p>
+        <div className="space-y-3">
+          {FAQS.map((f) => (
+            <FaqItem key={f.q} q={f.q} a={f.a} />
+          ))}
+        </div>
+        <div className="mt-8 text-center">
+          <Link href="/faq" className="inline-flex items-center gap-1.5 text-sm font-medium text-[#a99bff] hover:text-white">
+            Read the full FAQ
+            <ArrowRight size={15} />
+          </Link>
         </div>
       </section>
 
@@ -417,33 +483,46 @@ export default function LandingPage() {
         <p className="mx-auto mt-4 max-w-lg text-zinc-400">
           Join thousands of founders, agencies, and freelancers using WeBuild to launch faster.
         </p>
-        <Link
-          href="/dashboard"
-          className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#6d5efc] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-[#6d5efc]/25 transition-opacity hover:opacity-90"
-        >
-          Start Building Free
-          <ArrowRight size={18} />
-        </Link>
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#6d5efc] px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-[#6d5efc]/25 transition-opacity hover:opacity-90"
+          >
+            Start Building Free
+            <ArrowRight size={18} />
+          </Link>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-700 px-8 py-3.5 text-base font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white"
+          >
+            Talk to us
+          </Link>
+        </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-800 py-8">
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
-          <div className="flex items-center gap-2 text-sm text-zinc-500">
-            <Sparkles size={14} className="text-[#6d5efc]" />
-            <span>WeBuild</span>
-            <span className="text-zinc-700">|</span>
-            <span>2026 All rights reserved</span>
-          </div>
-          <div className="flex gap-6 text-sm text-zinc-500">
-            <Link href="/pricing" className="hover:text-zinc-300">Pricing</Link>
-            <Link href="/dashboard" className="hover:text-zinc-300">Dashboard</Link>
-            <Link href="/prompt-studio" className="hover:text-zinc-300">Prompt Studio</Link>
-            <Link href="/privacy" className="hover:text-zinc-300">Privacy</Link>
-            <Link href="/terms" className="hover:text-zinc-300">Terms</Link>
-          </div>
-        </div>
-      </footer>
+      <MarketingFooter />
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Local components                                                    */
+/* ------------------------------------------------------------------ */
+
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div className="rounded-xl border border-zinc-800 bg-[#141418]">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+      >
+        <span className="text-sm font-medium text-zinc-100">{q}</span>
+        {open ? <Minus size={16} className="shrink-0 text-zinc-500" /> : <Plus size={16} className="shrink-0 text-zinc-500" />}
+      </button>
+      {open && <p className="px-5 pb-4 text-sm leading-relaxed text-zinc-400">{a}</p>}
     </div>
   );
 }

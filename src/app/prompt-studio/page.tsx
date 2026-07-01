@@ -388,6 +388,17 @@ export default function PromptStudioPage() {
                     ref={inputRef}
                     value={store.rawInput}
                     onChange={(e) => store.setRawInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      // Ctrl/Cmd+Enter submits, matching common prompt-tool UX.
+                      const canAnalyze =
+                        store.rawInput.trim() &&
+                        store.status !== "analyzing" &&
+                        store.status !== "enhancing";
+                      if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && canAnalyze) {
+                        e.preventDefault();
+                        store.analyze();
+                      }
+                    }}
                     placeholder="Describe your website idea... e.g. 'A SaaS landing page for an AI-powered code review tool with dark theme, pricing tiers, and testimonials'"
                     rows={4}
                     className="w-full resize-none rounded-xl bg-transparent px-4 py-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none"
@@ -422,6 +433,11 @@ export default function PromptStudioPage() {
                     </div>
 
                     <div className="flex items-center gap-2">
+                      <span className="hidden text-[10px] text-zinc-600 sm:inline">
+                        <kbd className="rounded border border-white/10 bg-white/5 px-1">Ctrl</kbd>
+                        <span className="mx-0.5">+</span>
+                        <kbd className="rounded border border-white/10 bg-white/5 px-1">↵</kbd> to analyze
+                      </span>
                       {store.status !== "idle" && (
                         <button
                           onClick={store.reset}

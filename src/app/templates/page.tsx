@@ -12,6 +12,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { MarketingNav } from "@/components/marketing/MarketingNav";
+import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 import {
   getTemplatePage,
   getCategoryCounts,
@@ -49,31 +51,14 @@ export default function TemplatesPage() {
 
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 antialiased">
-      {/* Nav */}
-      <nav className="fixed inset-x-0 top-0 z-50 border-b border-zinc-800/60 bg-[#09090b]/80 backdrop-blur-lg">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-            <Sparkles size={20} className="text-[#6d5efc]" />
-            WeBuild
-          </Link>
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-sm text-zinc-400 hover:text-zinc-100">Home</Link>
-            <Link
-              href="/dashboard"
-              className="rounded-lg bg-[#6d5efc] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
-            >
-              Open Editor
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <MarketingNav />
 
       {/* Header */}
-      <section className="pt-28 pb-8 text-center">
+      <section className="pt-32 pb-8 text-center">
         <h1 className="text-4xl font-bold md:text-5xl">Template Gallery</h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-zinc-400">
+        <p className="mx-auto mt-4 max-w-xl px-4 text-lg text-zinc-400">
           {totalCount.toLocaleString()} ready-to-use templates across {categories.length} categories.
-          Pick one and make it yours.
+          Every one is fully editable and exports to clean code you own. Pick one and make it yours.
         </p>
       </section>
 
@@ -237,6 +222,8 @@ export default function TemplatesPage() {
           <ArrowRight size={16} />
         </Link>
       </section>
+
+      <MarketingFooter />
     </div>
   );
 }

@@ -1,28 +1,38 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
+  Briefcase,
   Code2,
   Download,
-  Edit3,
-  Globe,
   GripVertical,
   Layers,
   LayoutGrid,
-  Monitor,
-  MousePointerClick,
-  Palette,
+  Rocket,
   ShoppingBag,
-  Sparkles,
-  Type,
+  Users,
   Wand2,
   Zap,
 } from "lucide-react";
+import { MarketingNav } from "@/components/marketing/MarketingNav";
+import { MarketingFooter } from "@/components/marketing/MarketingFooter";
+
+export const metadata: Metadata = {
+  title: "Features",
+  description:
+    "AI generation, a visual editor, 22 section types, 2,001 templates, built-in e-commerce, and clean code export — everything you need to ship a high-converting site.",
+};
+
+const AUDIENCES = [
+  { icon: Rocket, title: "Founders", body: "Launch a credible marketing site or store before you hire a designer." },
+  { icon: Briefcase, title: "Agencies", body: "Spin up client sites in minutes and white-label the whole thing." },
+  { icon: Users, title: "Freelancers", body: "Deliver 3× faster with a real codebase you can hand off or host." },
+];
 
 const SECTIONS = [
   {
     title: "AI-Powered Generation",
+    outcome: "Go from a sentence to a full multi-page site.",
     description:
       "Type a prompt like 'a premium sneaker store with dark theme' and watch Claude AI build a complete, multi-page site with real copy, products, and a cohesive design system.",
     icon: Wand2,
@@ -37,8 +47,9 @@ const SECTIONS = [
   },
   {
     title: "Visual Drag-and-Drop Editor",
+    outcome: "Full creative control, zero code required.",
     description:
-      "Rearrange sections by dragging, edit text inline on the canvas, and fine-tune every property in the inspector panel. No code required.",
+      "Rearrange sections by dragging, edit text inline on the canvas, and fine-tune every property in the inspector panel.",
     icon: GripVertical,
     items: [
       "Drag-and-drop section reorder",
@@ -51,8 +62,9 @@ const SECTIONS = [
   },
   {
     title: "22 Section Types",
+    outcome: "Every building block a converting page needs.",
     description:
-      "Every building block you need — from hero and pricing to gallery, blog, timeline, comparison tables, and more.",
+      "From hero and pricing to gallery, blog, timeline, comparison tables, and more — assemble any layout.",
     icon: Layers,
     items: [
       "Navbar, Hero, Footer",
@@ -65,12 +77,13 @@ const SECTIONS = [
   },
   {
     title: "2,001 Starter Templates",
+    outcome: "Never start from a blank page.",
     description:
-      "Browse a curated library across 19 categories. E-commerce, SaaS, restaurants, portfolios, health, legal, finance, and more. One click to load.",
+      "Browse a curated library across 19 categories — e-commerce, SaaS, restaurants, portfolios, health, legal, finance, and more. One click to load.",
     icon: LayoutGrid,
     items: [
       "501 e-commerce store templates",
-      "500 website templates",
+      "500+ website templates",
       "19 industry categories",
       "11 visual style presets",
       "Search and filter by category",
@@ -79,6 +92,7 @@ const SECTIONS = [
   },
   {
     title: "E-Commerce Ready",
+    outcome: "Sell online from day one.",
     description:
       "Full storefront capabilities built in — product catalogs, shopping cart, checkout, and Stripe integration.",
     icon: ShoppingBag,
@@ -93,8 +107,9 @@ const SECTIONS = [
   },
   {
     title: "Export Clean Code",
+    outcome: "Own your site. No lock-in.",
     description:
-      "No lock-in. Export your site as a standalone HTML page, a full Next.js project, or a ZIP file ready to deploy.",
+      "Export your site as a standalone HTML page, a full Next.js project, or a ZIP file ready to deploy.",
     icon: Download,
     items: [
       "Single-file HTML export",
@@ -110,44 +125,50 @@ const SECTIONS = [
 export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 antialiased">
-      {/* Nav */}
-      <nav className="fixed inset-x-0 top-0 z-50 border-b border-zinc-800/60 bg-[#09090b]/80 backdrop-blur-lg">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-            <Sparkles size={20} className="text-[#6d5efc]" />
-            WeBuild
-          </Link>
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-sm text-zinc-400 hover:text-zinc-100">Home</Link>
-            <Link
-              href="/dashboard"
-              className="rounded-lg bg-[#6d5efc] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
-            >
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <MarketingNav />
 
       {/* Header */}
-      <section className="pt-28 pb-16 text-center">
-        <h1 className="text-4xl font-bold md:text-5xl">Features</h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-zinc-400">
-          Everything you need to go from idea to live website — powered by AI.
+      <section className="pt-32 pb-12 text-center">
+        <h1 className="text-4xl font-bold md:text-5xl">Everything you need to ship</h1>
+        <p className="mx-auto mt-4 max-w-xl px-4 text-lg text-zinc-400">
+          One platform to generate, design, and launch a high-converting website or store —
+          powered by AI, owned by you.
         </p>
+        <div className="mt-8">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#6d5efc] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          >
+            Start Building Free
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+      </section>
+
+      {/* Who it's for */}
+      <section className="mx-auto max-w-5xl px-4 pb-8">
+        <div className="grid gap-4 sm:grid-cols-3">
+          {AUDIENCES.map((a) => (
+            <div key={a.title} className="rounded-2xl border border-zinc-800 bg-[#141418] p-5">
+              <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-[#6d5efc]/10">
+                <a.icon size={18} className="text-[#a99bff]" />
+              </div>
+              <h3 className="text-sm font-semibold">{a.title}</h3>
+              <p className="mt-1 text-sm text-zinc-400">{a.body}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Feature sections */}
-      <div className="mx-auto max-w-4xl px-4 pb-24 space-y-20">
-        {SECTIONS.map((sec, i) => (
-          <section
-            key={sec.title}
-            className="flex flex-col gap-8 md:flex-row md:items-start md:gap-12"
-          >
+      <div className="mx-auto max-w-4xl space-y-20 px-4 py-16">
+        {SECTIONS.map((sec) => (
+          <section key={sec.title} className="flex flex-col gap-8 md:flex-row md:items-start md:gap-12">
             <div className="flex-1">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#6d5efc]/10">
                 <sec.icon size={24} className="text-[#a99bff]" />
               </div>
+              <p className="mb-1 text-sm font-medium text-[#a99bff]">{sec.outcome}</p>
               <h2 className="mb-3 text-2xl font-bold">{sec.title}</h2>
               <p className="mb-6 text-zinc-400">{sec.description}</p>
               <ul className="space-y-2">
@@ -169,17 +190,27 @@ export default function FeaturesPage() {
       {/* CTA */}
       <section className="border-t border-zinc-800 py-20 text-center">
         <h2 className="text-3xl font-bold">Ready to build?</h2>
-        <p className="mx-auto mt-3 max-w-md text-zinc-400">
-          Start free — no credit card required.
+        <p className="mx-auto mt-3 max-w-md px-4 text-zinc-400">
+          Start free — no credit card required. Upgrade only when you need more.
         </p>
-        <Link
-          href="/dashboard"
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#6d5efc] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-        >
-          Open Dashboard
-          <ArrowRight size={16} />
-        </Link>
+        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#6d5efc] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          >
+            Open Dashboard
+            <ArrowRight size={16} />
+          </Link>
+          <Link
+            href="/pricing"
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-700 px-6 py-3 text-sm font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white"
+          >
+            See pricing
+          </Link>
+        </div>
       </section>
+
+      <MarketingFooter />
     </div>
   );
 }
