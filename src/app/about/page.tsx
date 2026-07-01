@@ -34,7 +34,7 @@ const VALUES = [
 ];
 
 const METRICS = [
-  { value: "7,000+", label: "Templates crafted" },
+  { value: "10,000+", label: "Templates crafted" },
   { value: "22", label: "Section types" },
   { value: "19", label: "Industries" },
   { value: "100%", label: "Code ownership" },

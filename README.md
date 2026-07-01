@@ -9,7 +9,7 @@ Describe any business in plain English and get a beautiful, editable, high-conve
 ## What's Included
 
 - **AI-Powered Generation** — Claude AI turns a prompt into a complete multi-page site
-- **7,001 Starter Templates** — 2,801 e-commerce + 4,200 website templates across 19 categories
+- **10,001 Starter Templates** — 4,301 e-commerce + 5,700 website templates across 19 categories
 - **Visual Editor** — Drag-and-drop sections, inline text editing, AI-assisted edits
 - **22 Section Types** — Hero, features, pricing, testimonials, gallery, team, blog, contact, timeline, video, and 12 more
 - **E-Commerce Built In** — Product catalogs, cart drawer, checkout flow, order confirmation
@@ -92,7 +92,7 @@ src/
 ├── lib/
 │   ├── ai/                 # Claude AI pipeline
 │   ├── collab/             # Collaboration system
-│   ├── templates/          # 7,001 template catalog (combinator pattern)
+│   ├── templates/          # 10,001 template catalog (combinator pattern)
 │   ├── schema/             # Zod page schema
 │   ├── store/              # Zustand editor store
 │   ├── mock-auth/          # → swap for NextAuth
