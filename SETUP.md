@@ -1,4 +1,4 @@
-# WeBuild — Production Setup Guide
+# Sbuild — Production Setup Guide
 
 This guide walks you through converting the MVP demo into a fully production-ready SaaS.
 

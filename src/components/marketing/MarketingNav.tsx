@@ -35,7 +35,7 @@ export function MarketingNav() {
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-bold text-zinc-100">
           <Sparkles size={20} className="text-[#6d5efc]" />
-          WeBuild
+          Sbuild
         </Link>
 
         {/* Desktop links */}

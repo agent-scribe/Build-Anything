@@ -1,6 +1,6 @@
 # Prompt Studio — AI Prompt Engineering Platform
 
-WeBuild's Prompt Studio transforms a basic prompt input into an intelligent prompt engineering workflow. Users enter a rough idea and receive quality-scored, AI-enhanced, multi-version prompts they can refine, save, and export.
+Sbuild's Prompt Studio transforms a basic prompt input into an intelligent prompt engineering workflow. Users enter a rough idea and receive quality-scored, AI-enhanced, multi-version prompts they can refine, save, and export.
 
 ## Live URL
 

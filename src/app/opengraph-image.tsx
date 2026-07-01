@@ -20,7 +20,7 @@ export default function OGImage() {
         }}
       >
         <div style={{ fontSize: 72, fontWeight: 800, color: "#fafafa", marginBottom: 16 }}>
-          WeBuild
+          Sbuild
         </div>
         <div style={{ fontSize: 28, color: "#a1a1aa", maxWidth: 600, textAlign: "center" }}>
           AI-powered website & store generator. Describe → Generate → Export.

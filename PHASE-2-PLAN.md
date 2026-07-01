@@ -1,4 +1,4 @@
-# WeBuild — Phase 2 Plan
+# Sbuild — Phase 2 Plan
 
 **Phase 1 status: shipped and live.**
 Live app: https://webuild-studio.netlify.app · Repo: github.com/agent-scribe/Build-Anything · Host: Netlify (auto-deploy from `main`)
@@ -26,7 +26,7 @@ The AI generation and export were built as **serverless route handlers** that ca
 
 ## Phase 2 north star
 
-Turn the reliable demo into a real product: **real Claude generation in production, multi-page stores, deeper editing, real images, accounts, and a true checkout** — the feature set needed to actually sell a pre-revenue store built on WeBuild.
+Turn the reliable demo into a real product: **real Claude generation in production, multi-page stores, deeper editing, real images, accounts, and a true checkout** — the feature set needed to actually sell a pre-revenue store built on Sbuild.
 
 ---
 

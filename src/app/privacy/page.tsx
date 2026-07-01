@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "WeBuild privacy policy — how we collect, use, and protect your data.",
+    "Sbuild privacy policy — how we collect, use, and protect your data.",
 };
 
 export default function PrivacyPage() {
@@ -13,7 +13,7 @@ export default function PrivacyPage() {
       <nav className="border-b border-zinc-800/80 bg-[#09090b]/80 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
           <Link href="/" className="text-lg font-bold text-white">
-            WeBuild
+            Sbuild
           </Link>
           <div className="flex items-center gap-4">
             <Link
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
         <div className="space-y-8 text-sm leading-relaxed text-zinc-400">
           {/* Intro */}
           <p>
-            WeBuild Studio (&quot;WeBuild,&quot; &quot;we,&quot; &quot;us,&quot;
+            Sbuild Studio (&quot;Sbuild,&quot; &quot;we,&quot; &quot;us,&quot;
             or &quot;our&quot;) operates the website and SaaS platform located
             at{" "}
             <a
@@ -300,10 +300,10 @@ export default function PrivacyPage() {
               If you have questions about this Privacy Policy or wish to
               exercise your data rights, contact us at{" "}
               <a
-                href="mailto:privacy@webuild.studio"
+                href="mailto:privacy@sbuild.studio"
                 className="text-[#6d5efc] underline underline-offset-2 hover:text-[#8b7efc]"
               >
-                privacy@webuild.studio
+                privacy@sbuild.studio
               </a>
               .
             </p>
@@ -323,7 +323,7 @@ export default function PrivacyPage() {
       </main>
 
       <footer className="border-t border-zinc-800/60 py-6 text-center text-xs text-zinc-600">
-        &copy; {new Date().getFullYear()} WeBuild Studio. All rights reserved.
+        &copy; {new Date().getFullYear()} Sbuild Studio. All rights reserved.
         &nbsp;&middot;&nbsp;
         <Link href="/terms" className="hover:text-zinc-400">
           Terms of Service

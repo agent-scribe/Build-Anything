@@ -38,7 +38,7 @@ export function MarketingFooter() {
           <div>
             <Link href="/" className="flex items-center gap-2 text-base font-bold text-zinc-100">
               <Sparkles size={18} className="text-[#6d5efc]" />
-              WeBuild
+              Sbuild
             </Link>
             <p className="mt-3 max-w-xs text-sm text-zinc-500">
               Prompt to production-ready website in seconds. Design it visually, export clean code, launch anywhere.
@@ -66,8 +66,8 @@ export function MarketingFooter() {
           ))}
         </div>
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-zinc-800/60 pt-6 text-sm text-zinc-600 sm:flex-row">
-          <span>© {new Date().getFullYear()} WeBuild. All rights reserved.</span>
-          <span>Built with WeBuild.</span>
+          <span>© {new Date().getFullYear()} Sbuild. All rights reserved.</span>
+          <span>Built with Sbuild.</span>
         </div>
       </div>
     </footer>

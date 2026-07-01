@@ -1,4 +1,4 @@
-# WeBuild — Phase 1: Core Architecture & Engine
+# Sbuild — Phase 1: Core Architecture & Engine
 
 > Prompt-to-store AI builder. A user describes a business; the system generates a
 > tailored, high-converting, editable site represented as structured data, renders

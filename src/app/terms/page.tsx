@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "WeBuild terms of service — rules, rights, and responsibilities for using our platform.",
+    "Sbuild terms of service — rules, rights, and responsibilities for using our platform.",
 };
 
 export default function TermsPage() {
@@ -13,7 +13,7 @@ export default function TermsPage() {
       <nav className="border-b border-zinc-800/80 bg-[#09090b]/80 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
           <Link href="/" className="text-lg font-bold text-white">
-            WeBuild
+            Sbuild
           </Link>
           <div className="flex items-center gap-4">
             <Link
@@ -42,8 +42,8 @@ export default function TermsPage() {
           {/* Intro */}
           <p>
             These Terms of Service (&quot;Terms&quot;) govern your access to and
-            use of the WeBuild platform and services operated by WeBuild Studio
-            (&quot;WeBuild,&quot; &quot;we,&quot; &quot;us,&quot; or
+            use of the Sbuild platform and services operated by Sbuild Studio
+            (&quot;Sbuild,&quot; &quot;we,&quot; &quot;us,&quot; or
             &quot;our&quot;). By creating an account or using the Service, you
             agree to these Terms. If you do not agree, please do not use the
             Service.
@@ -55,7 +55,7 @@ export default function TermsPage() {
               1. Description of Service
             </h2>
             <p>
-              WeBuild is an AI-powered website and online store generator. Users
+              Sbuild is an AI-powered website and online store generator. Users
               describe a business in natural language, and the platform
               generates a complete, multi-page website or e-commerce store. Users
               can then customize the output using a visual editor and export
@@ -141,7 +141,7 @@ export default function TermsPage() {
               5.1 Your Content
             </p>
             <p className="mb-3">
-              You retain full ownership of the content you create using WeBuild,
+              You retain full ownership of the content you create using Sbuild,
               including generated websites, customizations, and exported code.
               You grant us a limited, non-exclusive license to host and process
               your content solely for the purpose of providing the Service.
@@ -150,9 +150,9 @@ export default function TermsPage() {
               5.2 Our Platform
             </p>
             <p className="mb-3">
-              The WeBuild platform — including its source code, design,
+              The Sbuild platform — including its source code, design,
               architecture, branding, and documentation — is the intellectual
-              property of WeBuild Studio (or its successor upon sale of the
+              property of Sbuild Studio (or its successor upon sale of the
               business). All rights not expressly granted herein are reserved.
             </p>
             <p className="mb-2 font-medium text-zinc-300">
@@ -248,7 +248,7 @@ export default function TermsPage() {
               10. Indemnification
             </h2>
             <p>
-              You agree to indemnify and hold harmless WeBuild Studio from any
+              You agree to indemnify and hold harmless Sbuild Studio from any
               claims, damages, losses, or expenses (including reasonable
               attorney&apos;s fees) arising from your use of the Service, your
               violation of these Terms, or your infringement of any third-party
@@ -278,7 +278,7 @@ export default function TermsPage() {
             </h2>
             <p>
               These Terms are governed by the laws of the jurisdiction in which
-              WeBuild Studio is incorporated, without regard to conflict of law
+              Sbuild Studio is incorporated, without regard to conflict of law
               provisions. Any disputes shall be resolved through good-faith
               negotiation first, then binding arbitration if negotiation fails,
               unless you are in a jurisdiction where arbitration clauses are
@@ -320,10 +320,10 @@ export default function TermsPage() {
             <p>
               For questions about these Terms, contact us at{" "}
               <a
-                href="mailto:legal@webuild.studio"
+                href="mailto:legal@sbuild.studio"
                 className="text-[#6d5efc] underline underline-offset-2 hover:text-[#8b7efc]"
               >
-                legal@webuild.studio
+                legal@sbuild.studio
               </a>
               .
             </p>
@@ -348,7 +348,7 @@ export default function TermsPage() {
       </main>
 
       <footer className="border-t border-zinc-800/60 py-6 text-center text-xs text-zinc-600">
-        &copy; {new Date().getFullYear()} WeBuild Studio. All rights reserved.
+        &copy; {new Date().getFullYear()} Sbuild Studio. All rights reserved.
         &nbsp;&middot;&nbsp;
         <Link href="/terms" className="hover:text-zinc-400">
           Terms of Service

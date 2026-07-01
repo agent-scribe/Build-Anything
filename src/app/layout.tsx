@@ -5,8 +5,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "WeBuild — AI Website & Store Generator",
-    template: "%s | WeBuild",
+    default: "Sbuild — AI Website & Store Generator",
+    template: "%s | Sbuild",
   },
   description:
     "Describe any business and instantly generate a beautiful, editable, high-converting website or online store. 10,000+ templates, 22 section types, visual editor, AI generation, e-commerce built in. Export clean code.",
@@ -14,21 +14,21 @@ export const metadata: Metadata = {
     "AI website builder", "website generator", "store builder", "e-commerce",
     "no-code", "AI design", "landing page builder", "Next.js", "React",
   ],
-  authors: [{ name: "WeBuild Studio" }],
-  creator: "WeBuild Studio",
+  authors: [{ name: "Sbuild Studio" }],
+  creator: "Sbuild Studio",
   metadataBase: new URL("https://webuild-studio.netlify.app"),
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://webuild-studio.netlify.app",
-    siteName: "WeBuild Studio",
-    title: "WeBuild — AI Website & Store Generator",
+    siteName: "Sbuild Studio",
+    title: "Sbuild — AI Website & Store Generator",
     description:
       "Prompt to website in seconds. 10,000+ templates, visual editor, e-commerce, AI generation. Export clean React or HTML.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "WeBuild — AI Website & Store Generator",
+    title: "Sbuild — AI Website & Store Generator",
     description:
       "Prompt to website in seconds. 10,000+ templates, visual editor, e-commerce, AI generation.",
   },

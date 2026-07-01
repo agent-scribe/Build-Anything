@@ -1,4 +1,4 @@
-# WeBuild — Phase 3 Plan
+# Sbuild — Phase 3 Plan
 
 **Phase 2 status: shipped.** All 8 milestones complete. MVP runs in demo mode with zero config.
 Live app: https://webuild-studio.netlify.app · Repo: github.com/agent-scribe/Build-Anything
@@ -16,7 +16,7 @@ navbar, hero, features, products, pricing, testimonials, faq, cta, newsletter, l
 
 ## Phase 3 north star
 
-**Scale the template library to 100+ ready-to-use designs, add missing section types, build the marketing site that sells WeBuild, and lay groundwork for real-time collaboration.** This phase turns "a tool" into "a platform with a catalog."
+**Scale the template library to 100+ ready-to-use designs, add missing section types, build the marketing site that sells Sbuild, and lay groundwork for real-time collaboration.** This phase turns "a tool" into "a platform with a catalog."
 
 ---
 
@@ -176,7 +176,7 @@ Build a template system and populate it with 100+ industry-specific starter site
 
 ### M3 — Landing page & marketing site
 
-Build the public-facing marketing site that sells WeBuild itself. This replaces the redirect-to-dashboard homepage.
+Build the public-facing marketing site that sells Sbuild itself. This replaces the redirect-to-dashboard homepage.
 
 **Pages:**
 - `/` — Hero with live demo embed, feature grid, social proof, pricing CTA
@@ -188,7 +188,7 @@ Build the public-facing marketing site that sells WeBuild itself. This replaces 
 - Live demo embed (iframe of the dashboard in read-only mode)
 - Feature comparison with competitors
 - Customer testimonial carousel
-- "Built with WeBuild" showcase gallery
+- "Built with Sbuild" showcase gallery
 - CTA sections with conversion tracking hooks
 
 **Acceptance:** A visitor can browse the marketing site, see templates, understand pricing, and click through to the dashboard.
@@ -218,4 +218,4 @@ Lay the groundwork for multi-user editing. Full Figma-style collab is Phase 4; t
 - Each new section type follows the pattern: Zod schema union member → renderer component → inspector fields → generator prompt update → defaults entry
 - Templates are pure data (SiteDocument JSON) — no code per template, just different prop combinations
 - The generator prompt should reference available templates so AI can remix them
-- Landing page can use WeBuild's own section components (dogfooding)
+- Landing page can use Sbuild's own section components (dogfooding)

@@ -7,8 +7,8 @@ import { MarketingNav } from "@/components/marketing/MarketingNav";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 
 // ponytail: swap these for the real inbox + scheduler before launch.
-const CONTACT_EMAIL = "hello@webuild.studio";
-const BOOKING_URL = "https://cal.com/webuild/intro";
+const CONTACT_EMAIL = "hello@sbuild.studio";
+const BOOKING_URL = "https://cal.com/sbuild/intro";
 
 export default function ContactPage() {
   const [name, setName] = React.useState("");

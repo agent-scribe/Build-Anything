@@ -18,7 +18,7 @@ interface EditBody {
   theme?: unknown;
 }
 
-const SYSTEM = `You are WeBuild's AI editor. You receive a section's current JSON props, its type, and a user instruction.
+const SYSTEM = `You are Sbuild's AI editor. You receive a section's current JSON props, its type, and a user instruction.
 Return ONLY the patched props JSON — same shape, same keys, just with the requested changes applied.
 Rules:
 - Return raw JSON only. No markdown fences, no commentary.

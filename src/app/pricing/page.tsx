@@ -14,7 +14,7 @@ const TIERS = [
     id: "free" as const,
     name: "Free",
     price: 0,
-    description: "Try WeBuild, no card needed",
+    description: "Try Sbuild, no card needed",
     bestFor: "Side projects & first drafts",
     features: [
       "3 projects",
@@ -22,7 +22,7 @@ const TIERS = [
       "HTML export",
       "Community support",
     ],
-    notIncluded: ["Custom domain", "Remove WeBuild branding"],
+    notIncluded: ["Custom domain", "Remove Sbuild branding"],
     highlighted: false,
   },
   {
@@ -72,7 +72,7 @@ const PRICING_FAQS = [
   },
   {
     q: "Do you take a cut of my sales?",
-    a: "No. WeBuild never touches your revenue. You only pay standard Stripe processing fees on your own store.",
+    a: "No. Sbuild never touches your revenue. You only pay standard Stripe processing fees on your own store.",
   },
   {
     q: "Is there a discount for annual billing?",

@@ -75,7 +75,7 @@ const FEATURES = [
 ];
 
 const STEPS = [
-  { num: "01", title: "Describe", text: "Tell WeBuild what you need in plain English." },
+  { num: "01", title: "Describe", text: "Tell Sbuild what you need in plain English." },
   { num: "02", title: "Generate", text: "AI creates a full site with content, layout, and theme." },
   { num: "03", title: "Customize", text: "Drag, drop, edit inline, tweak colors and fonts." },
   { num: "04", title: "Launch", text: "Export clean code and deploy anywhere." },
@@ -83,7 +83,7 @@ const STEPS = [
 
 const TESTIMONIALS = [
   { quote: "I built my entire Shopify replacement in 20 minutes. The AI nailed my brand voice.", author: "Sarah K.", role: "E-commerce Founder", result: "Launched in 1 day" },
-  { quote: "We used to spend $5K on landing pages. WeBuild does it in one prompt.", author: "Marcus T.", role: "Marketing Director", result: "Saved $5K / page" },
+  { quote: "We used to spend $5K on landing pages. Sbuild does it in one prompt.", author: "Marcus T.", role: "Marketing Director", result: "Saved $5K / page" },
   { quote: "The template library is insane. 10,000+ starting points and I always find something close.", author: "Priya R.", role: "Freelance Designer", result: "3× faster delivery" },
   { quote: "Export as Next.js is a game changer. I get a real codebase, not some locked-in builder.", author: "Jake L.", role: "Full-Stack Developer", result: "Zero lock-in" },
 ];
@@ -135,7 +135,7 @@ const CATEGORIES = [
 const FAQS = [
   {
     q: "Do I need to know how to code?",
-    a: "No. Describe what you want in plain English and WeBuild generates the whole site. Edit visually with drag-and-drop. Code export is there if you want it — never required.",
+    a: "No. Describe what you want in plain English and Sbuild generates the whole site. Edit visually with drag-and-drop. Code export is there if you want it — never required.",
   },
   {
     q: "Can I export my site and host it anywhere?",
@@ -146,7 +146,7 @@ const FAQS = [
     a: "Yes. The Free plan includes 3 projects and 5 AI generations a month, with HTML export. No credit card required to start.",
   },
   {
-    q: "Can I sell products with WeBuild?",
+    q: "Can I sell products with Sbuild?",
     a: "Yes. E-commerce is built in — product catalogs, cart, and checkout. Connect your Stripe keys to take real payments.",
   },
 ];
@@ -180,7 +180,7 @@ export default function LandingPage() {
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-zinc-400 md:text-xl">
-            WeBuild turns a plain-English description into a beautiful, editable, production-ready
+            Sbuild turns a plain-English description into a beautiful, editable, production-ready
             website or online store — for founders, agencies, and freelancers who need to ship fast.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
@@ -241,7 +241,7 @@ export default function LandingPage() {
           <div className="relative aspect-video w-full bg-gradient-to-br from-[#0e0e11] to-[#141418]">
             <iframe
               src="/dashboard"
-              title="WeBuild Live Demo"
+              title="Sbuild Live Demo"
               className="h-full w-full"
               loading="lazy"
             />
@@ -481,7 +481,7 @@ export default function LandingPage() {
           Ready to build something amazing?
         </h2>
         <p className="mx-auto mt-4 max-w-lg text-zinc-400">
-          Join thousands of founders, agencies, and freelancers using WeBuild to launch faster.
+          Join thousands of founders, agencies, and freelancers using Sbuild to launch faster.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link

@@ -1,4 +1,4 @@
-# WeBuild — AI Website & Store Generator
+# Sbuild — AI Website & Store Generator
 
 **Live demo:** [webuild-studio.netlify.app](https://webuild-studio.netlify.app)
 

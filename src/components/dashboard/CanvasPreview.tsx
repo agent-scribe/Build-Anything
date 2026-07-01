@@ -112,7 +112,7 @@ function EmptyState() {
         </div>
         <h2 className="text-lg font-medium text-zinc-200">Describe your site to begin</h2>
         <p className="mt-2 text-sm text-zinc-500">
-          Write a prompt above and WeBuild generates a complete, editable layout. Or load the sample
+          Write a prompt above and Sbuild generates a complete, editable layout. Or load the sample
           store from the sidebar to explore.
         </p>
         <div className="mt-5 inline-flex items-center gap-2 text-xs text-zinc-600">

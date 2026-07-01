@@ -12,7 +12,7 @@ const GROUPS: { title: string; items: { q: string; a: string }[] }[] = [
     items: [
       {
         q: "Do I need to know how to code?",
-        a: "No. Describe your business in plain English and WeBuild generates the entire site. You edit visually with drag-and-drop and inline text editing. Code is available on export but never required.",
+        a: "No. Describe your business in plain English and Sbuild generates the entire site. You edit visually with drag-and-drop and inline text editing. Code is available on export but never required.",
       },
       {
         q: "How long does it take to build a site?",
@@ -33,7 +33,7 @@ const GROUPS: { title: string; items: { q: string; a: string }[] }[] = [
       },
       {
         q: "Do I own the code and content?",
-        a: "100%. Everything WeBuild generates is yours to use, modify, and ship however you like.",
+        a: "100%. Everything Sbuild generates is yours to use, modify, and ship however you like.",
       },
     ],
   },
@@ -45,8 +45,8 @@ const GROUPS: { title: string; items: { q: string; a: string }[] }[] = [
         a: "Yes. E-commerce is built in — product catalogs, a cart drawer, and a checkout flow. Connect your Stripe keys to accept real payments.",
       },
       {
-        q: "Are there transaction fees from WeBuild?",
-        a: "No. WeBuild doesn't take a cut of your sales. You only pay your normal Stripe processing fees.",
+        q: "Are there transaction fees from Sbuild?",
+        a: "No. Sbuild doesn't take a cut of your sales. You only pay your normal Stripe processing fees.",
       },
     ],
   },
@@ -62,7 +62,7 @@ const GROUPS: { title: string; items: { q: string; a: string }[] }[] = [
         a: "The Studio plan includes white-label reselling and team collaboration. For volume or custom needs, reach out via the contact page.",
       },
       {
-        q: "What if WeBuild isn't right for me?",
+        q: "What if Sbuild isn't right for me?",
         a: "Start on the free plan to try it risk-free. If a paid plan doesn't fit, downgrade any time — no long-term contract.",
       },
     ],

@@ -79,7 +79,7 @@ export function Topbar({
   return (
     <header className="flex h-12 shrink-0 items-center justify-between border-b border-zinc-800/80 bg-[#0b0b0e] px-3">
       <div className="flex items-center gap-2.5 text-sm">
-        <span className="font-medium text-zinc-100">WeBuild</span>
+        <span className="font-medium text-zinc-100">Sbuild</span>
         <span className="text-zinc-700">/</span>
         <span className="text-zinc-400">{document?.meta.name ?? "Untitled"}</span>
         {usedMock ? (

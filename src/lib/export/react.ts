@@ -27,7 +27,7 @@ import { site } from "./site";
 
 /**
  * Drop-in entry. Renders the first page of your generated site.
- * Copy the /renderer, /sections and /schema folders from WeBuild alongside this file.
+ * Copy the /renderer, /sections and /schema folders from Sbuild alongside this file.
  */
 export default function App() {
   return (
@@ -38,7 +38,7 @@ export default function App() {
 }
 `,
 
-    "README.md": `# ${doc.meta.name} — exported from WeBuild
+    "README.md": `# ${doc.meta.name} — exported from Sbuild
 
 ${doc.meta.description}
 
@@ -48,9 +48,9 @@ ${doc.meta.description}
 - \`App.tsx\` — renders the home page
 
 ## Use it
-1. Copy \`schema/\`, \`renderer/\` and \`sections/\` from your WeBuild project next to these files.
+1. Copy \`schema/\`, \`renderer/\` and \`sections/\` from your Sbuild project next to these files.
 2. \`import App from "./App"\` and mount it.
-3. Edit \`site.json\` (or regenerate in WeBuild) — the UI updates deterministically.
+3. Edit \`site.json\` (or regenerate in Sbuild) — the UI updates deterministically.
 
 Generated ${new Date().toISOString().slice(0, 10)} · document version ${doc.version}
 `,

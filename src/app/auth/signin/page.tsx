@@ -27,7 +27,7 @@ export default function SignInPage() {
       <div className="w-full max-w-sm rounded-2xl border border-zinc-800 bg-[#141418] p-8">
         <div className="mb-6 flex items-center justify-center gap-2">
           <Sparkles className="text-[#6d5efc]" size={24} />
-          <h1 className="text-xl font-bold text-white">WeBuild</h1>
+          <h1 className="text-xl font-bold text-white">Sbuild</h1>
         </div>
         <p className="mb-6 text-center text-sm text-zinc-400">
           Sign in to save your projects and access them anywhere.

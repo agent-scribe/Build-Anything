@@ -7,7 +7,7 @@ import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "WeBuild is on a mission to make world-class web design accessible to everyone. Meet the studio behind the AI website generator.",
+    "Sbuild is on a mission to make world-class web design accessible to everyone. Meet the studio behind the AI website generator.",
 };
 
 const VALUES = [
@@ -55,7 +55,7 @@ export default function AboutPage() {
             Great web design, <span className="bg-gradient-to-r from-[#6d5efc] to-[#a99bff] bg-clip-text text-transparent">for everyone</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-zinc-400">
-            WeBuild started with a simple frustration: a beautiful, high-converting website took weeks
+            Sbuild started with a simple frustration: a beautiful, high-converting website took weeks
             and thousands of dollars — or a template that looked like everyone else&apos;s. We thought AI
             could close that gap without cutting corners. So we built it.
           </p>
@@ -84,7 +84,7 @@ export default function AboutPage() {
             wasn&apos;t the code, it was translating a founder&apos;s idea into a clear, credible, converting page.
           </p>
           <p>
-            WeBuild encodes that translation. Describe your business and the AI produces a complete,
+            Sbuild encodes that translation. Describe your business and the AI produces a complete,
             multi-page site with real copy, a coherent design system, and the sections that actually
             drive action. Then you take over in a visual editor — no code required, full control if you
             want it.
